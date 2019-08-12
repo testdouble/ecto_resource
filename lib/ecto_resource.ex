@@ -6,13 +6,13 @@ defmodule EctoResource do
   rather than the redundent, drifting crud functions.
 
 
-  defmodule MyContext do
-    use EctoResource
+      defmodule MyContext do
+        use EctoResource
 
-    using_repo(Repo) do
-      resource(MySchema)
-    end
-  end
+        using_repo(Repo) do
+          resource(MySchema)
+        end
+      end
 
   This will generate the functions:
 
