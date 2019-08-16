@@ -118,7 +118,6 @@ defmodule EctoResource do
     update: 2
   }
 
-
   @spec change(module, Ecto.Schema.t()) :: Ecto.Changeset.t()
   def change(schema, changable) do
     changable
@@ -199,19 +198,17 @@ defmodule EctoResource do
 
   defp accumulate_action_metadata(suffix, action, acc) do
     arity = action_arity(action)
-    name = case action do
-      :all -> :"#{action}_#{Inflex.pluralize(suffix)}"
-      _ -> :"#{action}_#{suffix}"
-    end
 
-    Map.put(
-      acc,
-      action,
-      %{
-        name: name,
-        description: "#{name}/#{arity}"
-      }
-    )
+    name =
+      case action do
+        :all -> :"#{action}_#{Inflex.pluralize(suffix)}"
+        _ -> :"#{action}_#{suffix}"
+      end
+
+    Map.put(acc, action, %{
+      description: "#{name}/#{arity}",
+      name: name
+    })
   end
 
   def resource_actions(suffix) do
@@ -235,32 +232,39 @@ defmodule EctoResource do
         {@repo, schema, descriptions}
       )
 
-      %{
-        all: %{name: all_fn},
-        change: %{name: change_fn},
-        create: %{name: create_fn},
-        delete: %{name: delete_fn},
-        get: %{name: get_fn},
-        update: %{name: update_fn}
-      } = resources
+      resources
+      |> Map.keys()
+      |> Enum.each(fn action ->
+        resource_action = Map.put(%{}, action, resources[action])
+        case resource_action do
+          %{all: %{name: name}} ->
+            def unquote(name)(options \\ []),
+              do: EctoResource.all(@repo, unquote(schema), options)
 
-      def unquote(all_fn)(options \\ []),
-        do: EctoResource.all(@repo, unquote(schema), options)
+          %{change: %{name: name}} ->
+            def unquote(name)(changable),
+              do: EctoResource.change(unquote(schema), changable)
 
-      def unquote(change_fn)(changable),
-        do: EctoResource.change(unquote(schema), changable)
+          %{create: %{name: name}} ->
+            def unquote(name)(attributes),
+              do: EctoResource.create(@repo, unquote(schema), attributes)
 
-      def unquote(create_fn)(attributes),
-        do: EctoResource.create(@repo, unquote(schema), attributes)
+          %{delete: %{name: name}} ->
+            def unquote(name)(deletable),
+              do: EctoResource.delete(@repo, deletable)
 
-      def unquote(delete_fn)(deletable),
-        do: EctoResource.delete(@repo, deletable)
+          %{get: %{name: name}} ->
+            def unquote(name)(id, options \\ []),
+              do: EctoResource.get(@repo, unquote(schema), id, options)
 
-      def unquote(get_fn)(id, options \\ []),
-        do: EctoResource.get(@repo, unquote(schema), id, options)
+          %{update: %{name: name}} ->
+            def unquote(name)(updatable, attributes),
+              do: EctoResource.update(@repo, unquote(schema), updatable, attributes)
 
-      def unquote(update_fn)(updatable, attributes),
-        do: EctoResource.update(@repo, unquote(schema), updatable, attributes)
+          _ ->
+            nil
+        end
+      end)
     end
   end
 
