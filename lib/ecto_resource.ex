@@ -35,12 +35,6 @@ defmodule EctoResource do
       - preloads
       - order_by
 
-  `MyContext.paginate_my_schema(pagination, options)`
-    - pagination
-    - options:
-      - preloads
-
-
   `MyContext.update_my_schema(updatable, attributes)`
     - updatable: Schema object to update
     - attributes
@@ -95,15 +89,6 @@ defmodule EctoResource do
     |> repo.all([])
   end
 
-  @spec paginate(Ecto.Repo.t(), module, Engine.Pagination.t(), term()) :: Scrivener.Page.t()
-  def paginate(repo, schema, pagination, options \\ []) do
-    preloads = Keyword.get(options, :preloads, [])
-
-    schema
-    |> preload(^preloads)
-    |> repo.paginate(pagination)
-  end
-
   @spec update(Ecto.Repo.t(), module, Ecto.Schema.t(), map()) ::
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
   def update(repo, schema, updateable, attributes) do
@@ -146,7 +131,6 @@ defmodule EctoResource do
       delete_function = :"delete_#{function_suffix}"
       get_function = :"get_#{function_suffix}"
       all_function = :"all_#{function_suffix}"
-      paginate_function = :"paginate_#{function_suffix}"
       update_function = :"update_#{function_suffix}"
 
       Module.put_attribute(
@@ -159,7 +143,6 @@ defmodule EctoResource do
            "#{delete_function}/1",
            "#{get_function}/2",
            "#{all_function}/1",
-           "#{paginate_function}/2",
            "#{update_function}/2"
          ]}
       )
@@ -178,9 +161,6 @@ defmodule EctoResource do
 
       def unquote(all_function)(options \\ []),
         do: EctoResource.all(@repo, unquote(schema), options)
-
-      def unquote(paginate_function)(pagination, options \\ []),
-        do: EctoResource.paginate(@repo, unquote(schema), pagination, options)
 
       def unquote(update_function)(updatable, attributes),
         do: EctoResource.update(@repo, unquote(schema), updatable, attributes)
