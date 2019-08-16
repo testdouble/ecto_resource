@@ -1,4 +1,4 @@
-defmodule EctoReadTest do
+defmodule EctoResourceReadTest do
   use ExUnit.Case
   alias MockRepo, as: Repo
   import Mox
@@ -22,7 +22,7 @@ defmodule EctoReadTest do
       use EctoResource
 
       using_repo(Repo) do
-        read(MySchema)
+        resource(MySchema, :read)
       end
     end
 

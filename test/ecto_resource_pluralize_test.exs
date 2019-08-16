@@ -1,4 +1,4 @@
-defmodule EctoAllPluralizeTest do
+defmodule EctoResourcePluralizeTest do
   use ExUnit.Case
   doctest EctoResource
   alias MockRepo, as: Repo

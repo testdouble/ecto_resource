@@ -1,4 +1,4 @@
-defmodule EctoWriteTest do
+defmodule EctoResourceWriteTest do
   use ExUnit.Case
   alias MockRepo, as: Repo
   import Mox
@@ -22,7 +22,7 @@ defmodule EctoWriteTest do
       use EctoResource
 
       using_repo(Repo) do
-        write(MySchema)
+        resource(MySchema, :write)
       end
     end
 

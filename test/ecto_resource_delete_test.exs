@@ -1,4 +1,4 @@
-defmodule EctoDeleteTest do
+defmodule EctoResourceDeleteTest do
   use ExUnit.Case
   alias MockRepo, as: Repo
   import Mox
@@ -22,7 +22,7 @@ defmodule EctoDeleteTest do
       use EctoResource
 
       using_repo(Repo) do
-        delete(MySchema)
+        resource(MySchema, :delete)
       end
     end
 

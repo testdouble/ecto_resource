@@ -186,7 +186,7 @@ defmodule EctoResource do
       Module.register_attribute(__MODULE__, :repo, [])
       Module.put_attribute(__MODULE__, :repo, unquote(repo))
       Module.register_attribute(__MODULE__, :resources, accumulate: true)
-      import EctoResource, only: [resource: 1, read: 1, write: 1, delete: 1]
+      import EctoResource, only: [resource: 2, resource: 1]
       unquote(block)
       def __resource__(:resources), do: @resources
       Module.delete_attribute(__MODULE__, :resources)
@@ -211,15 +211,55 @@ defmodule EctoResource do
     })
   end
 
-  def resource_actions(suffix) do
+  def resource_actions(suffix, only: subset) do
     @actions
     |> Map.keys()
+    |> Enum.filter(fn action ->
+      Enum.member?(subset, action)
+    end)
     |> Enum.reduce(%{}, &accumulate_action_metadata(suffix, &1, &2))
   end
 
-  defmacro resource(schema) do
-    quote bind_quoted: [schema: schema] do
-      resources = EctoResource.resource_actions(EctoResource.underscore_module_name(schema))
+  def resource_actions(suffix, except: excluded_set) do
+    @actions
+    |> Map.keys()
+    |> Enum.reject(fn action ->
+      Enum.member?(excluded_set, action)
+    end)
+    |> Enum.reduce(%{}, &accumulate_action_metadata(suffix, &1, &2))
+  end
+
+  def resource_actions(suffix, :read) do
+    @actions
+    |> Map.keys()
+    |> Enum.filter(fn action ->
+      Enum.member?([:all, :get], action)
+    end)
+    |> Enum.reduce(%{}, &accumulate_action_metadata(suffix, &1, &2))
+  end
+
+  def resource_actions(suffix, :write) do
+    @actions
+    |> Map.keys()
+    |> Enum.filter(fn action ->
+      Enum.member?([:change, :create, :update], action)
+    end)
+    |> Enum.reduce(%{}, &accumulate_action_metadata(suffix, &1, &2))
+  end
+
+  def resource_actions(suffix, :delete) do
+    @actions
+    |> Map.keys()
+    |> Enum.filter(fn action ->
+      Enum.member?([:delete], action)
+    end)
+    |> Enum.reduce(%{}, &accumulate_action_metadata(suffix, &1, &2))
+  end
+
+  defmacro resource(schema, options \\ [only: [:all, :change, :create, :delete, :get, :update]]) do
+    quote bind_quoted: [schema: schema, options: options] do
+      resources =
+        EctoResource.resource_actions(EctoResource.underscore_module_name(schema), options)
 
       descriptions =
         resources
@@ -236,6 +276,7 @@ defmodule EctoResource do
       |> Map.keys()
       |> Enum.each(fn action ->
         resource_action = Map.put(%{}, action, resources[action])
+
         case resource_action do
           %{all: %{name: name}} ->
             def unquote(name)(options \\ []),
@@ -265,91 +306,6 @@ defmodule EctoResource do
             nil
         end
       end)
-    end
-  end
-
-  def read_actions(suffix) do
-    @actions
-    |> Map.take([:all, :get])
-    |> Map.keys()
-    |> Enum.reduce(%{}, &accumulate_action_metadata(suffix, &1, &2))
-  end
-
-  defmacro read(schema) do
-    quote bind_quoted: [schema: schema] do
-      read_actions = EctoResource.read_actions(EctoResource.underscore_module_name(schema))
-
-      descriptions =
-        read_actions
-        |> Map.values()
-        |> Enum.map(& &1.description)
-
-      Module.put_attribute(
-        __MODULE__,
-        :resources,
-        {@repo, schema, descriptions}
-      )
-
-      %{all: %{name: all_fn}, get: %{name: get_fn}} = read_actions
-
-      def unquote(all_fn)(options \\ []),
-        do: EctoResource.all(@repo, unquote(schema), options)
-
-      def unquote(get_fn)(id, options \\ []),
-        do: EctoResource.get(@repo, unquote(schema), id, options)
-    end
-  end
-
-  def write_actions(suffix) do
-    @actions
-    |> Map.take([:change, :create, :update])
-    |> Map.keys()
-    |> Enum.reduce(%{}, &accumulate_action_metadata(suffix, &1, &2))
-  end
-
-  defmacro write(schema) do
-    quote bind_quoted: [schema: schema] do
-      write_actions = EctoResource.write_actions(EctoResource.underscore_module_name(schema))
-
-      descriptions =
-        write_actions
-        |> Map.values()
-        |> Enum.map(& &1.description)
-
-      Module.put_attribute(
-        __MODULE__,
-        :resources,
-        {@repo, schema, descriptions}
-      )
-
-      %{
-        change: %{name: change_fn},
-        create: %{name: create_fn},
-        update: %{name: update_fn}
-      } = write_actions
-
-      def unquote(change_fn)(changable),
-        do: EctoResource.change(unquote(schema), changable)
-
-      def unquote(create_fn)(attributes),
-        do: EctoResource.create(@repo, unquote(schema), attributes)
-
-      def unquote(update_fn)(updatable, attributes),
-        do: EctoResource.update(@repo, unquote(schema), updatable, attributes)
-    end
-  end
-
-  defmacro delete(schema) do
-    quote bind_quoted: [schema: schema] do
-      suffix = EctoResource.underscore_module_name(schema)
-
-      Module.put_attribute(
-        __MODULE__,
-        :resources,
-        {@repo, schema, ["delete_#{suffix}/1"]}
-      )
-
-      def unquote(:"delete_#{suffix}")(deletable), do: EctoResource.delete(@repo, deletable)
     end
   end
 end
