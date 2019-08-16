@@ -1,6 +1,5 @@
-defmodule EctoResourceTest do
+defmodule EctoWriteTest do
   use ExUnit.Case
-  doctest EctoResource
   alias MockRepo, as: Repo
   import Mox
 
@@ -18,12 +17,12 @@ defmodule EctoResourceTest do
     end
   end
 
-  describe "crud resource" do
+  describe "writeable resource" do
     defmodule FakeContext do
       use EctoResource
 
       using_repo(Repo) do
-        resource(MySchema)
+        write(MySchema)
       end
     end
 
@@ -31,11 +30,8 @@ defmodule EctoResourceTest do
       assert FakeContext.__resource__(:resources) == [
                {Repo, MySchema,
                 [
-                  "all_my_schemas/1",
                   "change_my_schema/1",
                   "create_my_schema/1",
-                  "delete_my_schema/1",
-                  "get_my_schema/2",
                   "update_my_schema/2"
                 ]}
              ]
@@ -51,27 +47,6 @@ defmodule EctoResourceTest do
 
       assert {:ok, %MySchema{id: 123}} =
                FakeContext.create_my_schema(%{something_interesting: "You can totally do this"})
-    end
-
-    test "generates a delete/1 function for the defined resources" do
-      Repo
-      |> expect(:delete, fn _schema, [] -> {:ok, %MySchema{id: 123}} end)
-
-      assert {:ok, %MySchema{id: 123}} = FakeContext.delete_my_schema(%MySchema{id: 123})
-    end
-
-    test "generates a get/2 function for the defined resources" do
-      Repo
-      |> expect(:get, fn _query, 123, [] -> %MySchema{id: 123} end)
-
-      assert %MySchema{id: 123} = FakeContext.get_my_schema(123)
-    end
-
-    test "generates an all/1 function for the defined resources" do
-      Repo
-      |> expect(:all, fn _query, [] -> [%MySchema{id: 123}] end)
-
-      assert [%MySchema{id: 123}] = FakeContext.all_my_schemas()
     end
 
     test "generates a update/2 function for the defined resources" do
