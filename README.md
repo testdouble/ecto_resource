@@ -17,7 +17,7 @@ end
 
 ## Basic Usage
 
-All examples are using `Accounts`. This can be substituted for a Phoenix context or any other module.
+All examples are using `Accounts`. This can be substituted for your Phoenix context or any other module.
 
 ```elixir
   defmodule Accounts do
