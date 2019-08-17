@@ -1,6 +1,5 @@
 defmodule EctoResourceOnlyTest do
   use ExUnit.Case
-  doctest EctoResource
   alias MockRepo, as: Repo
 
   defmodule MySchema do

@@ -1,6 +1,5 @@
 defmodule EctoResourcePluralizeTest do
   use ExUnit.Case
-  doctest EctoResource
   alias MockRepo, as: Repo
 
   defmodule Person do

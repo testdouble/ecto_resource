@@ -1,6 +1,5 @@
 defmodule EctoResourceTest do
   use ExUnit.Case
-  doctest EctoResource
   alias MockRepo, as: Repo
   import Mox
 
