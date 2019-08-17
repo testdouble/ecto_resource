@@ -43,7 +43,7 @@ defmodule Mix.Tasks.EctoResource.ResourcesTest do
   describe "without a context provided" do
     test "prints a helpful message" do
       assert capture_log([level: :error], fn -> Resources.run([]) end) =~
-               "$ mix engine.resources MyApp.MyContext"
+               "$ mix ecto_resource.resources MyApp.MyContext"
     end
   end
 end

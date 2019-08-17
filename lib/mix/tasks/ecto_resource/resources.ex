@@ -2,20 +2,30 @@ defmodule Mix.Tasks.EctoResource.Resources do
   @moduledoc """
   Task to list the resources defined by `EctoResource` within a context module.
 
-  $ mix ecto_resource.resources MyApp.MyContext
+  ## Examples
+
+      $ mix ecto_resource.resources MyApp.MyContext
+
+      Within the context Account, the following resource functions have been generated:
+
+      User using the repo Repo:
+      - Accounts.all_users/1
+      - Accounts.change_user/1
+      - Accounts.create_user/1
+      - Accounts.delete_user/1
+      - Accounts.get_user/2
+      - Accounts.update_user/2
   """
 
   use Mix.Task
   require Logger
 
-  @shortdoc "List generated resource functions for context"
   def run([]) do
     Logger.error("""
 
     This task must be called with a context that uses `EctoResource`
 
-    $ mix engine.resources MyApp.MyContext
-
+    $ mix ecto_resource.resources MyApp.MyContext
     """)
   end
 

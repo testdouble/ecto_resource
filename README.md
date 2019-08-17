@@ -17,7 +17,7 @@ end
 
 ## Basic Usage
 
-All examples are using `Accounts`. This can be substituted for your Phoenix context or any other module.
+All examples are using a "context" module `Accounts` and a schema of `User`. This can be substituted for your Phoenix context, or any other module and schema.
 
 ```elixir
   defmodule Accounts do
