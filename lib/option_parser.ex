@@ -86,10 +86,21 @@ defmodule EctoResource.OptionParser do
   def parse(suffix, :write), do: parse(suffix, only: [:change, :create, :update])
   def parse(suffix, :delete), do: parse(suffix, only: [:delete])
 
+  defp accumulate_functions(acc, suffix, :all) do
+    fn_map = @functions[:all]
+
+    Map.put(acc, :all, %{
+      resource: Inflex.pluralize(suffix),
+      name: function_name(suffix, fn_map),
+      description: function_description(suffix, fn_map)
+    })
+  end
+
   defp accumulate_functions(acc, suffix, function) do
     fn_map = @functions[function]
 
     Map.put(acc, function, %{
+      resource: suffix,
       name: function_name(suffix, fn_map),
       description: function_description(suffix, fn_map)
     })

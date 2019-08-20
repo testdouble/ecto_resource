@@ -258,7 +258,14 @@ defmodule EctoResource do
         action = Map.put(%{}, action, resources[action])
 
         case action do
-          %{all: %{name: name}} ->
+          %{all: %{name: name, resource: resource}} ->
+            @doc """
+            Returns a list of all #{resource}.
+
+            ## Examples
+                iex> #{name}()
+                [#{schema}, ...]
+            """
             def unquote(name)(options \\ []),
               do: EctoResource.all(@repo, unquote(schema), options)
 
