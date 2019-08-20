@@ -259,13 +259,12 @@ defmodule EctoResource do
 
         case action do
           %{all: %{name: name, resource: resource}} ->
-
             @doc """
             Returns a list of all #{resource}.
 
             ## Examples
                 iex> #{name}()
-                [#{schema}, ...]
+                [%#{EctoResource.underscore_module_name(schema)}{}, ...]
             """
             def unquote(name)(options \\ []),
               do: EctoResource.all(@repo, unquote(schema), options)
