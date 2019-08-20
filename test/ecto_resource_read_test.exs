@@ -31,7 +31,8 @@ defmodule EctoResourceReadTest do
                {Repo, MySchema,
                 [
                   "all_my_schemas/1",
-                  "get_my_schema/2"
+                  "get_my_schema/2",
+                  "get_my_schema!/2"
                 ]}
              ]
     end
@@ -41,6 +42,13 @@ defmodule EctoResourceReadTest do
       |> expect(:get, fn _query, 123, [] -> %MySchema{id: 123} end)
 
       assert %MySchema{id: 123} = FakeContext.get_my_schema(123)
+    end
+
+    test "generates a get!/2 function for the defined resources" do
+      Repo
+      |> expect(:get!, fn _query, 123, [] -> %MySchema{id: 123} end)
+
+      assert %MySchema{id: 123} = FakeContext.get_my_schema!(123)
     end
 
     test "generates an all/1 function for the defined resources" do

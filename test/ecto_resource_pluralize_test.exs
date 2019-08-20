@@ -32,9 +32,13 @@ defmodule EctoResourcePluralizeTest do
                   "all_people/1",
                   "change_person/1",
                   "create_person/1",
+                  "create_person!/1",
                   "delete_person/1",
+                  "delete_person!/1",
                   "get_person/2",
-                  "update_person/2"
+                  "get_person!/2",
+                  "update_person/2",
+                  "update_person!/2"
                 ]}
              ]
     end

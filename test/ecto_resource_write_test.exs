@@ -32,7 +32,9 @@ defmodule EctoResourceWriteTest do
                 [
                   "change_my_schema/1",
                   "create_my_schema/1",
-                  "update_my_schema/2"
+                  "create_my_schema!/1",
+                  "update_my_schema/2",
+                  "update_my_schema!/2"
                 ]}
              ]
     end
@@ -49,12 +51,30 @@ defmodule EctoResourceWriteTest do
                FakeContext.create_my_schema(%{something_interesting: "You can totally do this"})
     end
 
+    test "generates a create!/1 function for the defined resources" do
+      Repo
+      |> expect(:insert!, fn _query, [] -> {:ok, %MySchema{id: 123}} end)
+
+      assert {:ok, %MySchema{id: 123}} =
+               FakeContext.create_my_schema!(%{something_interesting: "You can totally do this"})
+    end
+
     test "generates a update/2 function for the defined resources" do
       Repo
       |> expect(:update, fn _query, [] -> {:ok, %MySchema{id: 123}} end)
 
       assert {:ok, %MySchema{id: 123}} =
                FakeContext.update_my_schema(%MySchema{}, %{
+                 someting_interesting: "Take the risk or lose the chance"
+               })
+    end
+
+    test "generates a update!/2 function for the defined resources" do
+      Repo
+      |> expect(:update!, fn _query, [] -> {:ok, %MySchema{id: 123}} end)
+
+      assert {:ok, %MySchema{id: 123}} =
+               FakeContext.update_my_schema!(%MySchema{}, %{
                  someting_interesting: "Take the risk or lose the chance"
                })
     end

@@ -27,7 +27,9 @@ defmodule EctoResourceDeleteTest do
     end
 
     test "generates __resource__(:resources)/0 for introspection" do
-      assert FakeContext.__resource__(:resources) == [{Repo, MySchema, ["delete_my_schema/1"]}]
+      assert FakeContext.__resource__(:resources) == [
+               {Repo, MySchema, ["delete_my_schema/1", "delete_my_schema!/1"]}
+             ]
     end
 
     test "generates a delete/1 function for the defined resources" do
@@ -35,6 +37,13 @@ defmodule EctoResourceDeleteTest do
       |> expect(:delete, fn _schema, [] -> {:ok, %MySchema{id: 123}} end)
 
       assert {:ok, %MySchema{id: 123}} = FakeContext.delete_my_schema(%MySchema{id: 123})
+    end
+
+    test "generates a delete!/1 function for the defined resources" do
+      Repo
+      |> expect(:delete!, fn _schema, [] -> {:ok, %MySchema{id: 123}} end)
+
+      assert {:ok, %MySchema{id: 123}} = FakeContext.delete_my_schema!(%MySchema{id: 123})
     end
   end
 end

@@ -33,9 +33,13 @@ defmodule EctoResourceTest do
                   "all_my_schemas/1",
                   "change_my_schema/1",
                   "create_my_schema/1",
+                  "create_my_schema!/1",
                   "delete_my_schema/1",
+                  "delete_my_schema!/1",
                   "get_my_schema/2",
-                  "update_my_schema/2"
+                  "get_my_schema!/2",
+                  "update_my_schema/2",
+                  "update_my_schema!/2"
                 ]}
              ]
     end
