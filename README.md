@@ -20,13 +20,28 @@ defmodule MyApp.Accounts do
 
   ## Examples
 
-      iex> list_users()
+      iex> all_users()
       [%User{}, ...]
 
   """
-  def list_users do
+  def all_users do
     Repo.all(User)
   end
+
+  @doc """
+  Gets a single user.
+
+  ## Examples
+
+      iex> get_user(123)
+      {:ok, %User{}}
+
+      iex> get_user(456)
+      {:error, %Ecto.Changeset{}}
+
+
+  """
+  def get_user(id), do: Repo.get(User, id)
 
   @doc """
   Gets a single user.
@@ -63,6 +78,26 @@ defmodule MyApp.Accounts do
   end
 
   @doc """
+  Creates a user.
+
+  Raises `Postgrex.Error` if the insert fails.
+
+  ## Examples
+
+      iex> create_user!(%{field: value})
+      {:ok, %User{}}
+
+      iex> create_user!(%{field: bad_value})
+      ** (Postgrex.Error)
+
+  """
+  def create_user!(attrs \\ %{}) do
+    %User{}
+    |> User.changeset(attrs)
+    |> Repo.insert!()
+  end
+
+  @doc """
   Updates a user.
 
   ## Examples
@@ -81,6 +116,26 @@ defmodule MyApp.Accounts do
   end
 
   @doc """
+  Updates a user.
+
+  Raises `Postgrex.Error` if the update fails.
+
+  ## Examples
+
+      iex> update_user!(user, %{field: new_value})
+      {:ok, %User{}}
+
+      iex> update_user!(user, %{field: bad_value})
+      ** (Postgrex.Error)
+
+  """
+  def update_user!(%User{} = user, attrs) do
+    user
+    |> User.changeset(attrs)
+    |> Repo.update!()
+  end
+
+  @doc """
   Deletes a User.
 
   ## Examples
@@ -94,6 +149,24 @@ defmodule MyApp.Accounts do
   """
   def delete_user(%User{} = user) do
     Repo.delete(user)
+  end
+
+  @doc """
+  Deletes a User.
+
+  Raises `Postgrex.Error` if the delete fails.
+
+  ## Examples
+
+      iex> delete_user!(user)
+      {:ok, %User{}}
+
+      iex> delete_user!(user)
+      ** (Postgrex.Error)
+
+  """
+  def delete_user!(%User{} = user) do
+    Repo.delete!(user)
   end
 
   @doc """
