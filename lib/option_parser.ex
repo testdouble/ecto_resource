@@ -1,4 +1,6 @@
 defmodule EctoResource.OptionParser do
+  @moduledoc false
+
   @functions %{
     all: %{
       arity: 1,
