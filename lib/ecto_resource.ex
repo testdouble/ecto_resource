@@ -21,7 +21,7 @@ defmodule EctoResource do
         action: nil,
         changes: %{},
         errors: [],
-        data: #Engine.BusinessPartners.BusinessPartner<>,
+        data: #User<>,
         valid?: true
       >
 
