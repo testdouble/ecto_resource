@@ -259,6 +259,7 @@ defmodule EctoResource do
 
         case action do
           %{all: %{name: name, resource: resource}} ->
+
             @doc """
             Returns a list of all #{resource}.
 
