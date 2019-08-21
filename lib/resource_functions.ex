@@ -1,4 +1,9 @@
 defmodule EctoResource.ResourceFunctions do
+  @moduledoc """
+  This module represents the generic CRUD functionality that is boilerplate within
+  Phoenix context files. These are wrapper functions around basic Ecto.Repo
+  functions for CRUD operations.
+  """
   import Ecto.Query
 
   @doc """

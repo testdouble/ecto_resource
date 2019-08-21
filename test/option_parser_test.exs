@@ -8,7 +8,7 @@ defmodule EctoResource.OptionParserTest do
       assert OptionParser.parse("suffix", []) == %{
                all: %{
                  name: :all_suffixes,
-                 description: "all_suffixes/1",
+                 description: "all_suffixes/1"
                },
                change: %{
                  name: :change_suffix,
