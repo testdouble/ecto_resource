@@ -36,4 +36,19 @@ defmodule EctoResource.Helpers do
     |> Map.values()
     |> Enum.map(& &1.description)
   end
+
+  @doc """
+  Get the string version of the schema name
+
+  ## Examples
+      iex> schema_name(User)
+      "User"
+  """
+  @spec schema_name(module()) :: String.t()
+  def schema_name(schema) do
+    schema
+    |> Macro.to_string()
+    |> String.split(".")
+    |> List.last()
+  end
 end

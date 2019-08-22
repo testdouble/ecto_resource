@@ -72,6 +72,7 @@ defmodule EctoResource do
   defmacro resource(schema, options \\ []) do
     quote bind_quoted: [schema: schema, options: options] do
       suffix = Helpers.underscore_module_name(schema)
+      schema_name = Helpers.schema_name(schema)
       resources = OptionParser.parse(suffix, options)
       descriptions = Helpers.resource_descriptions(resources)
 
@@ -81,6 +82,13 @@ defmodule EctoResource do
       |> Enum.each(fn {action, %{name: name}} ->
         case action do
           :all ->
+            @doc """
+            Returns a list of #{unquote(schema_name)} schemas.
+
+            ## Examples
+                #{unquote(schema_name)}.all()
+                [%#{unquote(schema_name)}{id: 123}]
+            """
             def unquote(name)(options \\ []),
               do: ResourceFunctions.all(@repo, unquote(schema), options)
 
