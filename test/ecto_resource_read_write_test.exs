@@ -1,4 +1,4 @@
-defmodule EctoResourceWriteTest do
+defmodule EctoResourceReadWriteTest do
   use ExUnit.Case
   alias MockRepo, as: Repo
   import Mox
@@ -22,7 +22,7 @@ defmodule EctoResourceWriteTest do
       use EctoResource
 
       using_repo(Repo) do
-        resource(MySchema, :write)
+        resource(MySchema, :read_write)
       end
     end
 
@@ -30,9 +30,12 @@ defmodule EctoResourceWriteTest do
       assert FakeContext.__resource__(:resources) == [
                {Repo, MySchema,
                 [
+                  "all_my_schemas/1",
                   "change_my_schema/1",
                   "create_my_schema/1",
                   "create_my_schema!/1",
+                  "get_my_schema/2",
+                  "get_my_schema!/2",
                   "update_my_schema/2",
                   "update_my_schema!/2"
                 ]}

@@ -64,7 +64,7 @@ defmodule EctoResource.OptionParser do
   to be generated.
 
   ## Examples
-      iex> parse("user", only: [:create])
+      iex> parse("user", only: [:create, :create!])
 
       %{
         create: %{
@@ -77,7 +77,7 @@ defmodule EctoResource.OptionParser do
         }
       }
 
-      iex> parse("user", except: [:change, :update, :delete, :get, :update, :all])
+      iex> parse("user", except: [:change, :update, :delete, :get!, :update, :all])
 
       %{
         create: %{
@@ -87,6 +87,10 @@ defmodule EctoResource.OptionParser do
         create!: %{
           name: :create_user!,
           description: "create_user!/1"
+        },
+        get: %{
+          name: :get_user,
+          description: "get_user/2"
         }
       }
 
@@ -107,9 +111,21 @@ defmodule EctoResource.OptionParser do
         }
       }
 
-      iex> parse("user", :write)
+      iex> parse("user", :read_write)
 
       %{
+        all: %{
+          name: :all_users,
+          description: "all_users/1"
+        },
+        get: %{
+          name: :get_user,
+          description: "get_user/2"
+        },
+        get!: %{
+          name: :get_user!,
+          description: "get_user!/2"
+        },
         change: %{
           name: :change_user,
           description: "change_user/1"
@@ -131,21 +147,13 @@ defmodule EctoResource.OptionParser do
           description: "update_user!/2"
         }
       }
-
-      iex> parse("user", :delete)
-
-      %{
-        delete: %{
-          name: :delete_user,
-          description: "delete_user/1"
-        },
-        delete!: %{
-          name: :delete_user!,
-          description: "delete_user!/1"
-        }
-      }
   """
   @spec parse(String.t(), list() | atom()) :: map()
+  def parse(suffix, :read), do: parse(suffix, only: [:all, :get, :get!])
+
+  def parse(suffix, :read_write),
+    do: parse(suffix, only: [:all, :get, :get!, :change, :create, :create!, :update, :update!])
+
   def parse(suffix, []) do
     @functions
     |> Map.keys()
@@ -154,31 +162,14 @@ defmodule EctoResource.OptionParser do
     end)
   end
 
-  def parse(suffix, only: filters) do
-    filters = add_error_filters(filters)
-
+  def parse(suffix, options) do
     @functions
     |> Map.keys()
-    |> Enum.filter(fn function -> Enum.member?(filters, function) end)
+    |> filter_functions(options)
     |> Enum.reduce(%{}, fn function, acc ->
       accumulate_functions(acc, suffix, function)
     end)
   end
-
-  def parse(suffix, except: filters) do
-    filters = add_error_filters(filters)
-
-    @functions
-    |> Map.keys()
-    |> Enum.reject(fn function -> Enum.member?(filters, function) end)
-    |> Enum.reduce(%{}, fn function, acc ->
-      accumulate_functions(acc, suffix, function)
-    end)
-  end
-
-  def parse(suffix, :read), do: parse(suffix, only: [:all, :get])
-  def parse(suffix, :write), do: parse(suffix, only: [:change, :create, :update])
-  def parse(suffix, :delete), do: parse(suffix, only: [:delete])
 
   @spec accumulate_functions(map(), String.t(), atom()) :: map()
   defp accumulate_functions(acc, suffix, function) do
@@ -190,11 +181,13 @@ defmodule EctoResource.OptionParser do
     })
   end
 
-  @spec add_error_filters(list()) :: map()
-  defp add_error_filters(filters) do
-    Enum.reduce(filters, filters, fn filter, acc ->
-      [:"#{filter}!" | acc]
-    end)
+  @spec filter_functions(list(String.t()), keyword(list())) :: list(String.t())
+  defp filter_functions(functions, except: filters) do
+    Enum.reject(functions, &Enum.member?(filters, &1))
+  end
+
+  defp filter_functions(functions, only: filters) do
+    Enum.filter(functions, &Enum.member?(filters, &1))
   end
 
   @spec function_name(String.t(), map()) :: atom()
