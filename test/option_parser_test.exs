@@ -8,7 +8,7 @@ defmodule EctoResource.OptionParserTest do
       assert OptionParser.parse("suffix", []) == %{
                all: %{
                  name: :all_suffixes,
-                 description: "all_suffixes/1",
+                 description: "all_suffixes/1"
                },
                change: %{
                  name: :change_suffix,
@@ -55,30 +55,30 @@ defmodule EctoResource.OptionParserTest do
                  name: :create_suffix,
                  description: "create_suffix/1"
                },
-               create!: %{
-                 name: :create_suffix!,
-                 description: "create_suffix!/1"
-               },
                update: %{
                  name: :update_suffix,
                  description: "update_suffix/2"
-               },
-               update!: %{
-                 name: :update_suffix!,
-                 description: "update_suffix!/2"
                }
              }
     end
 
     test "when given the except atom and list of operations" do
-      assert OptionParser.parse("suffix", except: [:create, :delete]) == %{
+      assert OptionParser.parse("suffix", except: [:create, :delete!]) == %{
                all: %{
                  name: :all_suffixes,
                  description: "all_suffixes/1"
                },
+               create!: %{
+                 name: :create_suffix!,
+                 description: "create_suffix!/1"
+               },
                change: %{
                  name: :change_suffix,
                  description: "change_suffix/1"
+               },
+               delete: %{
+                 name: :delete_suffix,
+                 description: "delete_suffix/1"
                },
                get: %{
                  name: :get_suffix,
@@ -116,8 +116,20 @@ defmodule EctoResource.OptionParserTest do
              }
     end
 
-    test "when given :write" do
-      assert OptionParser.parse("suffix", :write) == %{
+    test "when given :read_write" do
+      assert OptionParser.parse("suffix", :read_write) == %{
+               all: %{
+                 name: :all_suffixes,
+                 description: "all_suffixes/1"
+               },
+               get: %{
+                 name: :get_suffix,
+                 description: "get_suffix/2"
+               },
+               get!: %{
+                 name: :get_suffix!,
+                 description: "get_suffix!/2"
+               },
                change: %{
                  name: :change_suffix,
                  description: "change_suffix/1"
@@ -137,19 +149,6 @@ defmodule EctoResource.OptionParserTest do
                update!: %{
                  name: :update_suffix!,
                  description: "update_suffix!/2"
-               }
-             }
-    end
-
-    test "when given :delete" do
-      assert OptionParser.parse("suffix", :delete) == %{
-               delete: %{
-                 name: :delete_suffix,
-                 description: "delete_suffix/1"
-               },
-               delete!: %{
-                 name: :delete_suffix!,
-                 description: "delete_suffix!/1"
                }
              }
     end

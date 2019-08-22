@@ -1,8 +1,8 @@
 defmodule Mix.Tasks.EctoResource.ResourcesTest do
   use ExUnit.Case
   import ExUnit.CaptureLog
-  alias MockRepo
   alias Mix.Tasks.EctoResource.Resources
+  alias MockRepo
 
   defmodule FakeData do
     use Ecto.Schema

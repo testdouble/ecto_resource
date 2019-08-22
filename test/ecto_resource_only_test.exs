@@ -1,5 +1,6 @@
 defmodule EctoResourceOnlyTest do
   use ExUnit.Case
+  import Mox
   alias MockRepo, as: Repo
 
   defmodule MySchema do
@@ -21,16 +22,20 @@ defmodule EctoResourceOnlyTest do
       use EctoResource
 
       using_repo(Repo) do
-        resource(MySchema, only: [:change])
+        resource(MySchema, only: [:create])
       end
     end
 
     test "generates __resource__(:resources)/0 for introspection" do
-      assert FakeContext.__resource__(:resources) == [{Repo, MySchema, ["change_my_schema/1"]}]
+      assert FakeContext.__resource__(:resources) == [{Repo, MySchema, ["create_my_schema/1"]}]
     end
 
-    test "generates a change/1 function for the defined resources" do
-      assert %Ecto.Changeset{data: %MySchema{}} = FakeContext.change_my_schema(%MySchema{id: 123})
+    test "generates a create/1 function for the defined resources" do
+      Repo
+      |> expect(:insert, fn _query, [] -> {:ok, %MySchema{id: 123}} end)
+
+      assert {:ok, %MySchema{id: 123}} =
+               FakeContext.create_my_schema(%{something_interesting: "You can totally do this"})
     end
   end
 end
