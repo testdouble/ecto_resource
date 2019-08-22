@@ -16,14 +16,14 @@ defmodule EctoResource.MixProject do
       elixir: "~> 1.8",
       package: package(),
       start_permanent: Mix.env() == :prod,
-      version: "1.0.3"
+      version: "1.1.0"
     ]
   end
 
   defp aliases do
     [
       credo: "credo --strict --config-file .credo.ex",
-      check: ["credo", "dialyzer", "inch"]
+      check: ["credo", "dialyzer", "cmd MIX_ENV=test mix test"]
     ]
   end
 
@@ -56,7 +56,6 @@ defmodule EctoResource.MixProject do
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.0"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      {:inch_ex, github: "rrrene/inch_ex", only: [:dev, :test]},
       {:inflex, "~> 2.0.0"},
       {:mox, "~> 0.5.0", only: :test},
       {:postgrex, ">= 0.0.0"}

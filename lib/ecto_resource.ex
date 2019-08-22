@@ -83,50 +83,202 @@ defmodule EctoResource do
         case action do
           :all ->
             @doc """
-            Returns a list of #{unquote(schema_name)} schemas.
+            Fetches all #{schema_name} entries from the data store.
 
             ## Examples
-                #{unquote(schema_name)}.all()
-                [%#{unquote(schema_name)}{id: 123}]
+                #{name}()
+                [%#{schema_name}{id: 123}]
+
+                #{name}(prefix: "my_prefix")
+                [%#{schema_name}{id: 123}]
+
+                #{name}(max_rows: 500)
+                [%#{schema_name}{id: 123}]
             """
+            @spec unquote(name)(keyword(list())) :: list(Ecto.Schema.t())
             def unquote(name)(options \\ []),
               do: ResourceFunctions.all(@repo, unquote(schema), options)
 
           :change ->
-            def unquote(name)(struct_or_changeset),
-              do: ResourceFunctions.change(unquote(schema), struct_or_changeset)
+            @doc """
+            Creates a #{schema_name} changeset.
+
+                #{name}(%#{schema_name}{}, %{})
+
+                #Ecto.Changeset<
+                  action: nil,
+                  changes: %{},
+                  errors: [],
+                  data: ##{schema_name}<>,
+                  valid?: true
+                >
+
+            """
+            @spec unquote(name)(map()) :: Ecto.Changeset.t()
+            def unquote(name)(attributes),
+              do: ResourceFunctions.change(unquote(schema), attributes)
 
           :create ->
+            @doc """
+            Creates a #{schema_name} with the given attributes.
+
+            ## Examples
+                #{name}(%{})
+                {:ok, %#{schema_name}{}}
+
+                #{name}(%{invalid: "invalid"})
+                {:error, %Ecto.Changeset{}}
+            """
+            @spec unquote(name)(map()) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
             def unquote(name)(attributes),
               do: ResourceFunctions.create(@repo, unquote(schema), attributes)
 
           :create! ->
+            @doc """
+            Same as create_#{suffix}/1 but returns the struct or raises if the changeset is invalid.
+
+            ## Examples
+                #{name}(%{})
+                %#{schema_name}{}
+
+                #{name}(%{invalid: "invalid"})
+                ** (Ecto.InvalidChangesetError)
+            """
             def unquote(name)(attributes),
               do: ResourceFunctions.create!(@repo, unquote(schema), attributes)
 
           :delete ->
-            def unquote(name)(struct_or_changeset),
-              do: ResourceFunctions.delete(@repo, struct_or_changeset)
+            @doc """
+            Deletes a given record from the data store.
+
+            ## Examples
+                #{name}(%#{schema_name}{id: 123})
+                {:ok,
+                 %#{schema_name}{
+                   __meta__: #Ecto.Schema.Metadata<:deleted, "#{schema.__schema__(:source)}">,
+                   id: 123,
+                   inserted_at: ~N[2019-08-17 00:41:41],
+                   updated_at: ~N[2019-08-17 00:41:41]
+                 }}
+
+                 #{name}(%#{schema_name}{id: 456})
+                 {:error, %Ecto.Changeset{}}
+
+            """
+            @spec unquote(name)(Ecto.Schema.t()) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+            def unquote(name)(struct),
+              do: ResourceFunctions.delete(@repo, struct)
 
           :delete! ->
-            def unquote(name)(struct_or_changeset),
-              do: ResourceFunctions.delete!(@repo, struct_or_changeset)
+            @doc """
+            Same as delete_#{suffix}/1 but returns the struct or raises if the changeset is invalid.
+
+            ## Examples
+                #{name}(%#{schema_name}{id: 123})
+                %#{schema_name}{
+                  __meta__: #Ecto.Schema.Metadata<:deleted, "#{schema.__schema__(:source)}">,
+                  id: 123,
+                  inserted_at: ~N[2019-08-17 00:41:41],
+                  updated_at: ~N[2019-08-17 00:41:41]
+                }
+
+                #{name}(%#{schema_name}{id: 456})
+                ** (Ecto.StaleEntryError)
+            """
+            def unquote(name)(struct),
+              do: ResourceFunctions.delete!(@repo, struct)
 
           :get ->
+            @doc """
+            Fetches a single #{schema_name} from the data store where the primary key matches the given id.
+
+            ## Examples
+                #{name}(123)
+                %#{schema_name}{id: 123}
+
+                #{name}(456)
+                nil
+
+                #{name}(123, preloads: [:relation])
+                %#{schema_name}{
+                   __meta__: #Ecto.Schema.Metadata<:loaded, "#{schema.__schema__(:source)}">,
+                   id: 1,
+                   relation: %Relation{
+                     __meta__: #Ecto.Schema.Metadata<:loaded, "relations">,
+                   },
+                   inserted_at: ~N[2019-08-15 18:52:50],
+                   updated_at: ~N[2019-08-15 18:52:50]
+                 }
+            """
+            @spec unquote(name)(String.t() | integer(), keyword(list())) :: Ecto.Schema.t() | nil
             def unquote(name)(id, options \\ []),
               do: ResourceFunctions.get(@repo, unquote(schema), id, options)
 
           :get! ->
+            @doc """
+            Same as get_#{suffix}/2 but raises Ecto.NoResultsError if no record was found.
+
+            ## Examples
+                #{name}(123)
+                %#{schema_name}{id: 123}
+
+                #{name}(456)
+                ** (Ecto.NoResultsError)
+
+                #{name}(123, preloads: [:relation])
+                %#{schema_name}{
+                   __meta__: #Ecto.Schema.Metadata<:loaded, "#{schema.__schema__(:source)}">,
+                   id: 1,
+                   relation: %Relation{
+                     __meta__: #Ecto.Schema.Metadata<:loaded, "relations">,
+                   },
+                   inserted_at: ~N[2019-08-15 18:52:50],
+                   updated_at: ~N[2019-08-15 18:52:50]
+                 }
+            """
             def unquote(name)(id, options \\ []),
               do: ResourceFunctions.get!(@repo, unquote(schema), id, options)
 
           :update ->
-            def unquote(name)(struct, changeset),
-              do: ResourceFunctions.update(@repo, unquote(schema), struct, changeset)
+            @doc """
+            Updates a %#{schema_name}{} with the given attributes.
 
+            ## Examples
+                #{name}(%#{schema_name}{id: 123}, %{attribute: "updated attribute"})
+                {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+
+                #{name}(%#{schema_name}{id: 123}, %{}, force: true)
+                {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+
+                #{name}(%#{schema_name}{id: 123}, %{}, prefix: "my_prefix")
+                {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+
+                #{name}(%#{schema_name}{id: 123}, %{invalid: "invalid"})
+                {:error, %Ecto.Changeset{}}
+            """
+            @spec unquote(name)(Ecto.Schema.t(), map()) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+            def unquote(name)(struct, attributes),
+              do: ResourceFunctions.update(@repo, unquote(schema), struct, attributes)
+
+          @doc """
+          Same as update_#{suffix}/2 returns a %#{schema_name}{} or raises if the changeset is invalid.
+
+          ## Examples
+              #{name}(%#{schema_name}{id: 123}, %{attribute: "updated attribute"})
+              {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+
+              #{name}(%#{schema_name}{id: 123}, %{}, force: true)
+              {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+
+              #{name}(%#{schema_name}{id: 123}, %{}, prefix: "my_prefix")
+              {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+
+              #{name}(%#{schema_name}{id: 123}, %{invalid: "invalid"})
+              ** (Ecto.InvalidChangesetError)
+          """
           :update! ->
-            def unquote(name)(struct, changeset),
-              do: ResourceFunctions.update!(@repo, unquote(schema), struct, changeset)
+            def unquote(name)(struct, attributes),
+              do: ResourceFunctions.update!(@repo, unquote(schema), struct, attributes)
 
           _ ->
             nil

@@ -1,10 +1,5 @@
 defmodule EctoResource.OptionParser do
-  @moduledoc """
-  This module provides a means to parse options given to `EctoResource.resource/2`
-  into a map containing the set of functions to be generated in the using module.
-
-  DO NOT USE this module. It is documented here for development purposes only!
-  """
+  @moduledoc false
 
   @functions %{
     all: %{
@@ -59,95 +54,6 @@ defmodule EctoResource.OptionParser do
     }
   }
 
-  @doc """
-  Turns options (keyword list or atom) into a map containing all the CRUD functions
-  to be generated.
-
-  ## Examples
-      iex> parse("user", only: [:create, :create!])
-
-      %{
-        create: %{
-          name: :create_user,
-          description: "create_user/1"
-        },
-        create!: %{
-          name: :create_user!,
-          description: "create_user!/1"
-        }
-      }
-
-      iex> parse("user", except: [:change, :update, :delete, :get!, :update, :all])
-
-      %{
-        create: %{
-          name: :create_user,
-          description: "create_user/1"
-        },
-        create!: %{
-          name: :create_user!,
-          description: "create_user!/1"
-        },
-        get: %{
-          name: :get_user,
-          description: "get_user/2"
-        }
-      }
-
-      iex> parse("user", :read)
-
-      %{
-        all: %{
-          name: :all_users,
-          description: "all_users/1"
-        },
-        get: %{
-          name: :get_user,
-          description: "get_user/2"
-        },
-        get!: %{
-          name: :get_user!,
-          description: "get_user!/2"
-        }
-      }
-
-      iex> parse("user", :read_write)
-
-      %{
-        all: %{
-          name: :all_users,
-          description: "all_users/1"
-        },
-        get: %{
-          name: :get_user,
-          description: "get_user/2"
-        },
-        get!: %{
-          name: :get_user!,
-          description: "get_user!/2"
-        },
-        change: %{
-          name: :change_user,
-          description: "change_user/1"
-        },
-        create: %{
-          name: :create_user,
-          description: "create_user/1"
-        },
-        create!: %{
-          name: :create_user!,
-          description: "create_user!/1"
-        },
-        update: %{
-          name: :update_user,
-          description: "update_user/2"
-        },
-        update!: %{
-          name: :update_user!,
-          description: "update_user!/2"
-        }
-      }
-  """
   @spec parse(String.t(), list() | atom()) :: map()
   def parse(suffix, :read), do: parse(suffix, only: [:all, :get, :get!])
 
