@@ -1,424 +1,383 @@
-# EctoResource
+EctoResource
+============
+
+* [About](#about)
+* [Features](#features)
+* [Installation](#installation)
+* [Usage](#usage)
+  * [Basic usage](#basic-usage---generate-all-ectoresource-functions)
+  * [Explicit usage](#explicit-usage---generate-only-given-functions)
+  * [Exclusive usage](#exclusive-usage---generate-all-but-the-given-functions)
+  * [Alias :read](#alias-read---generate-data-access-functions)
+  * [Alias :read_write](#alias-read_write---generate-data-access-and-manipulation-functions-excluding-delete)
+  * [Resource functions](#resource-functions)
+* [Caveats](#caveats)
+* [Contribution](#contribution)
+  * [Bug reports](#bug_reports)
+  * [Pull requests](#pull_requests)
+* [License](#license)
+* [Authors](#authors)
 
 Eliminate boilerplate involved in defining basic CRUD functions in a Phoenix context or Elixir module.
 
-Turn this:
+About
+-----
+When using [Context modules](https://hexdocs.pm/phoenix/contexts.html) in a [Phoenix](https://phoenixframework.org/) application, there's a general need to define the standard CRUD functions for a given `Ecto.Schema`. Phoenix context generators will even do this automatically. Soon you will notice that there's quite a lot of code involved in CRUD access within your contexts.
+
+This can become problematic for a few reasons:
+
+* Boilerplate functions for CRUD access, for every `Ecto.Schema` referenced in that context, introduce more noise than signal. This can obscure the more interesting details of the context.
+* These functions may tend to accumulate drift from the standard API by inviting edits for new use-cases, reducing the usefulness of naming conventions.
+* The burden of locally testing wrapper functions, yields low value for the writing and maintainence investment.
+
+In short, at best this code is redundant and at worst is a deviant entanglement of modified conventions. All of which amounts to a more-painful development experience. `EctoResource` was created to ease this pain.
+
+Features
+--------
+
+### Generate CRUD functions for a given `Ecto.Repo` and `Ecto.Schema`
+
+`EctoResource` can be used to generate CRUD functions for a given `Ecto.Repo` and `Ecto.Schema`. By default it will create every function needed to create, read, update, and delete the resouce. It includes the `!` version of each function (where relevant) that will raise an error instead of return a value.
+
+### Allow customization of generated resources
+
+You can optionally include or exclude specific functions to generate exactly the functions your context requires. There's also two handy aliases for generating read functions and read/write functions.
+
+### Automatic pluralization
+
+For methods that return a list of records, it seems natural to use a plural name. For example, take a function named `MyContext.all_schema`. While this works, it makes the grammar a bit awkward and distracts from the intent of the function. `EctoResource` uses `Inflex` when generating functions to create readable english function names automatically. For example, given the schema `Person`, a function named `all_people/1` is generated.
+
+### Generate documentation for each generated function
+
+Every function generated includes documentation so your application's documentation will include the generated functions with examples.
+
+### Reflection metadata
+
+A function is generated for each resource defined by `EctoResource` to list all the functions generated for each `Ecto.Repo` and `Ecto.Schema`. A mix task is included to provide easy access to this information.
+
+### Supports any module
+
+While `EctoResource` was designed for [Phoenix Contexts](https://hexdocs.pm/phoenix/contexts.html) in mind, It can be used in any Elixir module.
+
+Installation
+------------
+
+This package is available in [Hex](https://hex.pm/), the package can be installed by adding ecto_resource to your list of dependencies in mix.exs:
 
 ```elixir
-defmodule MyApp.Accounts do
-  @moduledoc """
-  The Accounts context.
-  """
-
-  import Ecto.Query, warn: false
-  alias MyApp.Repo
-
-  alias MyApp.Accounts.User
-
-  @doc """
-  Returns the list of users.
-
-  ## Examples
-
-      iex> all_users()
-      [%User{}, ...]
-
-  """
-  def all_users do
-    Repo.all(User)
-  end
-
-  @doc """
-  Gets a single user.
-
-  ## Examples
-
-      iex> get_user(123)
-      {:ok, %User{}}
-
-      iex> get_user(456)
-      {:error, %Ecto.Changeset{}}
-
-
-  """
-  def get_user(id), do: Repo.get(User, id)
-
-  @doc """
-  Gets a single user.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_user!(id), do: Repo.get!(User, id)
-
-  @doc """
-  Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Creates a user.
-
-  Raises `Postgrex.Error` if the insert fails.
-
-  ## Examples
-
-      iex> create_user!(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user!(%{field: bad_value})
-      ** (Postgrex.Error)
-
-  """
-  def create_user!(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert!()
-  end
-
-  @doc """
-  Updates a user.
-
-  ## Examples
-
-      iex> update_user(user, %{field: new_value})
-      {:ok, %User{}}
-
-      iex> update_user(user, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Updates a user.
-
-  Raises `Postgrex.Error` if the update fails.
-
-  ## Examples
-
-      iex> update_user!(user, %{field: new_value})
-      {:ok, %User{}}
-
-      iex> update_user!(user, %{field: bad_value})
-      ** (Postgrex.Error)
-
-  """
-  def update_user!(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update!()
-  end
-
-  @doc """
-  Deletes a User.
-
-  ## Examples
-
-      iex> delete_user(user)
-      {:ok, %User{}}
-
-      iex> delete_user(user)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
-  end
-
-  @doc """
-  Deletes a User.
-
-  Raises `Postgrex.Error` if the delete fails.
-
-  ## Examples
-
-      iex> delete_user!(user)
-      {:ok, %User{}}
-
-      iex> delete_user!(user)
-      ** (Postgrex.Error)
-
-  """
-  def delete_user!(%User{} = user) do
-    Repo.delete!(user)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
-  """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
-  end
-end
-
+    def deps do
+      [
+        {:ecto_resource, "~> 1.1.0"}
+      ]
+    end
 ```
 
-Into this:
+Usage
+-----
+
+### Basic usage - generate all `EctoResource` functions
 
 ```elixir
-defmodule MyApp.Accounts do
+defmodule MyApp.MyContext do
+  alias MyApp.Repo
+  alias MyApp.Schema
   use EctoResource
 
+  using_repo(Repo) do
+    resource(Schema)
+  end
+end
+```
+
+This generates all the functions `EctoResource` has to offer:
+
+* `MyContext.all_schemas/1`
+* `MyContext.change_schema/1`
+* `MyContext.create_schema/1`
+* `MyContext.create_schema!/1`
+* `MyContext.delete_schema/1`
+* `MyContext.delete_schema!/1`
+* `MyContext.get_schema/2`
+* `MyContext.get_schema!/2`
+* `MyContext.update_schema/2`
+* `MyContext.update_schema!/2`
+
+### Explicit usage - generate only given functions
+
+```elixir
+defmodule MyApp.MyContext do
   alias MyApp.Repo
-  alias MyApp.Accounts.User
+  alias MyApp.Schema
+  use EctoResource
 
   using_repo(Repo) do
-    resource(User)
+    resource(Schema, only: [:create, :delete!])
   end
 end
-
 ```
 
-## Installation
+This generates only the given functions:
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `ecto_resource` to your list of dependencies in `mix.exs`:
+* `MyContext.create_schema/1`
+* `MyContext.delete_schema!/1`
 
-```elixir
-def deps do
-  [
-    {:ecto_resource, "~> 0.1.0"}
-  ]
-end
-```
-
-## Basic Usage
-
-All examples are using a "context" module `Accounts` and a schema of `User`. This can be substituted for your Phoenix context, or any other module and schema.
+### Exclusive usage - generate all but the given functions
 
 ```elixir
-  defmodule Accounts do
-    use EctoResource
+defmodule MyApp.MyContext do
+  alias MyApp.Repo
+  alias MyApp.Schema
+  use EctoResource
 
-    using_repo(Repo) do
-      resource(User)
-    end
+  using_repo(Repo) do
+    resource(Schema, except: [:create, :delete!])
   end
-```
-
-This will generate the functions:
-
-```elixir
-def create_user(attributes) do
-  EctoResource.create(Repo, User, attributes)
-end
-
-def create_user!(attributes) do
-  EctoResource.create!(Repo, User, attributes)
-end
-
-def all_users(options \\ []) do
-  EctoResource.all(Repo, User, options)
-end
-
-def get_user(id, options \\ []) do
-  EctoResource.get(Repo, User, id, options)
-end
-
-def get_user!(id, options \\ []) do
-  EctoResource.get!(Repo, User, id, options)
-end
-
-def change_user(attributes) do
-  EctoResource.change(User, attributes)
-end
-
-def update_user(%User{id: 1}, attributes) do
-  EctoResource.update(Repo, User, struct, attributes)
-end
-
-def update_user!(%User{id: 1}, attributes) do
-  EctoResource.update!(Repo, User, struct, attributes)
-end
-
-def delete_user(struct) do
-  EctoResource.delete(Repo, struct)
-end
-
-def delete_user!(struct) do
-  EctoResource.delete!(Repo, struct)
 end
 ```
 
-There are also introspection functions to understand what is generated by the macro
+This generates all the functions excluding the given functions:
+
+* `MyContext.all_schemas/1`
+* `MyContext.change_schema/1`
+* `MyContext.create_schema!/1`
+* `MyContext.delete_schema/1`
+* `MyContext.get_schema/2`
+* `MyContext.get_schema!/2`
+* `MyContext.update_schema/2`
+* `MyContext.update_schema!/2`
+
+### Alias `:read` - generate data access functions
 
 ```elixir
-Accounts.__resource__(:resources) == [
-  {Repo, User,
-    [
-      "all_users/1",
-      "change_user/1",
-      "create_user/1",
-      "create_user!/1",
-      "delete_user/1",
-      "delete_user!/1",
-      "get_user/2",
-      "get_user!/2",
-      "update_user/2",
-      "update_user!/2"
-    ]}
+defmodule MyApp.MyContext do
+  alias MyApp.Repo
+  alias MyApp.Schema
+  use EctoResource
+
+  using_repo(Repo) do
+    resource(Schema, :read)
+  end
+end
+```
+
+This generates all the functions necessary for reading data:
+
+* `MyContext.all_schemas/1`
+* `MyContext.get_schema/2`
+* `MyContext.get_schema!/2`
+
+### Alias `:read_write` - generate data access and manipulation functions, excluding delete
+
+```elixir
+defmodule MyApp.MyContext do
+  alias MyApp.Repo
+  alias MyApp.Schema
+  use EctoResource
+
+  using_repo(Repo) do
+    resource(Schema, :read_write)
+  end
+end
+```
+
+This generates all the functions except `delete_schema/1` and `delete_schema!/1`:
+
+* `MyContext.all_schemas/1`
+* `MyContext.change_schema/1`
+* `MyContext.create_schema/1`
+* `MyContext.create_schema!/1`
+* `MyContext.get_schema/2`
+* `MyContext.get_schema!/2`
+* `MyContext.update_schema/2`
+* `MyContext.update_schema!/2`
+
+### Resource functions
+
+The general idea of the generated resource functions is to abstract away the `Ecto.Repo` and `Ecto.Schema` parts of data access with `Ecto` and provide an API to the context that feels natural and clear to the caller.
+
+The following examples will all assume a repo named `Repo` and a schema named `Person`.
+
+#### all_people
+
+Fetches a list of all %Person{} entries from the data store. _Note: `EctoResource` will pluralize this function name using `Inflex`_
+
+```elixir
+iex> all_people()
+[%Person{id: 1}]
+
+iex> all_people(preloads: [:address])
+[%Person{id: 1, address: %Address{}}]
+
+iex> all_people(order_by: [desc: :id])
+[%Person{id: 2}, %Person{id: 1}]
+
+iex> all_people(preloads: [:address], order_by: [desc: :id]))
+[
+  %Person{
+    id: 2,
+    address: %Address{}
+  },
+  %Person{
+    id: 1,
+    address: %Address{}
+  }
 ]
 ```
 
-## Advanced usage
+#### change_person
 
-More granular control is available through options
-
-## :read
+Creates a `%Person{}` changeset.
 
 ```elixir
-defmodule Accounts do
-  use EctoResource
-
-  using_repo(Repo) do
-    resource(User, :read)
-  end
-end
+iex> change_person(%{name: "Example Person"})
+#Ecto.Changeset<
+  action: nil,
+  changes: %{name: "Example Person"},
+  errors: [],
+  data: #Person<>,
+  valid?: true
+>
 ```
 
-This will generate the functions:
+#### create_person
+
+Inserts a `%Person{}` with the given attributes in the data store, returning an `:ok`/`:error` tuple.
 
 ```elixir
-def all_users(options \\ []) do
-  EctoResource.all(Repo, User, options)
-end
+iex> create_person(%{name: "Example Person"})
+{:ok, %Person{id: 123, name: "Example Person"}}
 
-def get_user(id, options \\ []) do
-  EctoResource.get(Repo, User, id, options)
-end
-
-def get_user!(id, options \\ []) do
-  EctoResource.get!(Repo, User, id, options)
-end
+iex> create_person(%{invalid: "invalid"})
+{:error, %Ecto.Changeset}
 ```
 
-## :read_write
+#### create_person!
+
+Inserts a `%Person{}` with the given attributes in the data store, returning a `%Person{}` or raises `Ecto.InvalidChangesetError`.
 
 ```elixir
-defmodule Accounts do
-  use EctoResource
+iex> create_person!(%{name: "Example Person"})
+%Person{id: 123, name: "Example Person"}
 
-  using_repo(Repo) do
-    resource(User, :read_write)
-  end
-end
+iex> create_person!(%{invalid: "invalid"})
+** (Ecto.InvalidChangesetError)
 ```
 
-This will generate the functions:
+#### delete_person
+
+Deletes a given `%Person{}` from the data store, returning an `:ok`/`:error` tuple.
 
 ```elixir
-def all_users(options \\ []) do
-  EctoResource.all(Repo, User, options)
-end
+iex> delete_person(%Person{id: 1})
+{:ok, %Person{id: 1}}
 
-def get_user(id, options \\ []) do
-  EctoResource.get(Repo, User, id, options)
-end
-
-def get_user!(id, options \\ []) do
-  EctoResource.get!(Repo, User, id, options)
-end
-
-def create_user(attributes) do
-  EctoResource.create(Repo, User, attributes)
-end
-
-def create_user!(attributes) do
-  EctoResource.create!(Repo, User, attributes)
-end
-
-def change_user(attributes) do
-  EctoResource.change(User, attributes)
-end
-
-def update_user(%User{id: 1}, attributes) do
-  EctoResource.update(Repo, User, struct, attributes)
-end
-
-def update_user!(%User{id: 1}, attributes) do
-  EctoResource.update!(Repo, User, struct, attributes)
-end
+iex> delete_person(%Person{id: 999})
+{:error, %Ecto.Changeset}
 ```
 
-## :only
+#### delete_person!
+
+Deletes a given `%Person{}` from the data store, returning the deleted `%Person{}`, or raises `Ecto.StaleEntryError`.
 
 ```elixir
-defmodule Accounts do
-  use EctoResource
+iex> delete_person!(%Person{id: 1})
+%Person{id: 1}
 
-  using_repo(Repo) do
-    resource(User, only: [:change, :create!])
-  end
+iex> delete_person!(%Person{id: 999})
+** (Ecto.StaleEntryError)
 ```
 
-This will generate the functions:
+#### get_person
+
+Fetches a single `%Person{}` from the data store where the primary key matches the given id, returns a `%Person{}` or `nil`.
 
 ```elixir
-def change_user(attributes) do
-  EctoResource.change(User, attributes)
-end
+iex> get_person(1)
+%Person{id: 1}
 
-def create_user!(attributes) do
-  EctoResource.change!(User, attributes)
-end
+iex> get_person(999)
+nil
+
+iex> get_person(1, preloads: [:address])
+%Person{
+    id: 1,
+    address: %Address{}
+}
 ```
 
-## :except
+#### get_person!
+
+Fetches a single `%Person{}` from the data store where the primary key matches the given id, returns a `%Person{}` or raises `Ecto.NoResultsError`.
 
 ```elixir
-defmodule Accounts do
-  use EctoResource
+iex> get_person!(1)
+%Person{id: 1}
 
-  using_repo(Repo) do
-    resource(User, except: [:change, :update, :update!, :create!, :all, :get, :get!, :delete])
-  end
+iex> get_person!(999)
+** (Ecto.NoResultsError)
+
+iex> get_person!(1, preloads: [:address])
+%Person{
+    id: 1,
+    address: %Address{}
+}
 ```
 
-This will generate the functions:
+#### update_person
+
+Updates a given %Person{} with the given attributes, returns an `:ok`/`:error` tuple.
 
 ```elixir
-def create_user(attributes) do
-  EctoResource.create(Repo, User, attributes)
-end
+iex> update_person(%Person{id: 1}, %{name: "New Person"})
+{:ok, %Person{id: 1, name: "New Person"}}
 
-def delete_user!(struct_or_changeset) do
-  EctoResource.delete!(Repo, struct_or_changeset)
-end
+iex> update_person(%Person{id: 1}, %{invalid: "invalid"})
+{:error, %Ecto.Changeset}
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/ecto_resource](https://hexdocs.pm/ecto_resource).
+#### update_person!
 
+Updates a given %Person{} with the given attributes, returns a %Person{} or raises `Ecto.InvalidChangesetError`.
+
+```elixir
+iex> update_person!(%Person{id: 1}, %{name: "New Person"})
+%Person{id: 1, name: "New Person"}
+
+iex> update_person!(%Person{id: 1}, %{invalid: "invalid"})
+** (Ecto.InvalidChangesetError)
+```
+
+Caveats
+-------
+This is not meant to be used as a wrapper for all the Repo functions within a context. Not all callbacks defined in Ecto.Repo are generated. `EctoResource` should be used to help reduce boilerplate code and tests for general CRUD operations.
+
+It may be the case that `EctoResource` needs to evolve and provide slightly more functionality/flexibility in the future. However, the general focus is reducing boilerplate code.
+
+Contribution
+------------
+
+### Bug reports
+
+If you discover any bugs, feel free to create an issue on [GitHub](https://github.com/daytonn/ecto_resource/issues). Please add as much information as possible to help in fixing the potential bug. You are also encouraged to help even more by forking and sending us a pull request.
+
+[Issues on GitHub](https://github.com/daytonn/ecto_resource/issues)
+
+### Pull requests
+
+* Fork it (https://github.com/daytonn/ecto_resource/fork)
+* Add upstream remote (`git remote add upstream git@github.com:daytonn/ecto_resource.git`)
+* Make sure you're up-to-date with upstream master (`git pull upstream master`)
+* Create your feature branch (`git checkout -b feature/fooBar`)
+* Commit your changes (`git commit -am 'Add some fooBar'`)
+* Push to the branch (`git push origin feature/fooBar`)
+* Create a new Pull Request
+
+### Nice to have features/improvements (:point_up::wink:)
+
+* Ability to override pluralization
+* Find functions (maybe?)
+
+
+License
+-------
+[Apache 2.0](https://raw.githubusercontent.com/daytonn/ecto_resource/master/LICENSE.txt)

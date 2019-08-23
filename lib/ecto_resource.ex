@@ -89,11 +89,23 @@ defmodule EctoResource do
                 #{name}()
                 [%#{schema_name}{id: 123}]
 
-                #{name}(prefix: "my_prefix")
-                [%#{schema_name}{id: 123}]
+                #{name}(preloads: [:relation])
+                [%#{schema_name}{id: 123, relation: %Relation{}}]
 
-                #{name}(max_rows: 500)
-                [%#{schema_name}{id: 123}]
+                #{name}(order_by: [desc: :id])
+                [%#{schema_name}{id: 2}, %#{schema_name}{id: 1}]
+
+                #{name}(preloads: [:relation], order_by: [desc: :id])
+                [
+                  %#{schema_name}{
+                    id: 2,
+                    relation: %Relation{}
+                  },
+                  %#{schema_name}{
+                    id: 1,
+                    relation: %Relation{}
+                  }
+                ]
             """
             @spec unquote(name)(keyword(list())) :: list(Ecto.Schema.t())
             def unquote(name)(options \\ []),
@@ -120,7 +132,7 @@ defmodule EctoResource do
 
           :create ->
             @doc """
-            Creates a #{schema_name} with the given attributes.
+            Inserts a #{schema_name} with the given attributes in the data store.
 
             ## Examples
                 #{name}(%{})
@@ -149,20 +161,14 @@ defmodule EctoResource do
 
           :delete ->
             @doc """
-            Deletes a given record from the data store.
+            Deletes a given %#{schema_name}{} from the data store.
 
             ## Examples
                 #{name}(%#{schema_name}{id: 123})
-                {:ok,
-                 %#{schema_name}{
-                   __meta__: #Ecto.Schema.Metadata<:deleted, "#{schema.__schema__(:source)}">,
-                   id: 123,
-                   inserted_at: ~N[2019-08-17 00:41:41],
-                   updated_at: ~N[2019-08-17 00:41:41]
-                 }}
+                {:ok, %#{schema_name}{id: 123}}
 
-                 #{name}(%#{schema_name}{id: 456})
-                 {:error, %Ecto.Changeset{}}
+                #{name}(%#{schema_name}{id: 456})
+                {:error, %Ecto.Changeset{}}
 
             """
             @spec unquote(name)(Ecto.Schema.t()) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
@@ -175,12 +181,7 @@ defmodule EctoResource do
 
             ## Examples
                 #{name}(%#{schema_name}{id: 123})
-                %#{schema_name}{
-                  __meta__: #Ecto.Schema.Metadata<:deleted, "#{schema.__schema__(:source)}">,
-                  id: 123,
-                  inserted_at: ~N[2019-08-17 00:41:41],
-                  updated_at: ~N[2019-08-17 00:41:41]
-                }
+                %#{schema_name}{id: 123}
 
                 #{name}(%#{schema_name}{id: 456})
                 ** (Ecto.StaleEntryError)
@@ -201,14 +202,9 @@ defmodule EctoResource do
 
                 #{name}(123, preloads: [:relation])
                 %#{schema_name}{
-                   __meta__: #Ecto.Schema.Metadata<:loaded, "#{schema.__schema__(:source)}">,
-                   id: 1,
-                   relation: %Relation{
-                     __meta__: #Ecto.Schema.Metadata<:loaded, "relations">,
-                   },
-                   inserted_at: ~N[2019-08-15 18:52:50],
-                   updated_at: ~N[2019-08-15 18:52:50]
-                 }
+                  id: 1,
+                  relation: %Relation{}
+                }
             """
             @spec unquote(name)(String.t() | integer(), keyword(list())) :: Ecto.Schema.t() | nil
             def unquote(name)(id, options \\ []),
@@ -227,14 +223,9 @@ defmodule EctoResource do
 
                 #{name}(123, preloads: [:relation])
                 %#{schema_name}{
-                   __meta__: #Ecto.Schema.Metadata<:loaded, "#{schema.__schema__(:source)}">,
-                   id: 1,
-                   relation: %Relation{
-                     __meta__: #Ecto.Schema.Metadata<:loaded, "relations">,
-                   },
-                   inserted_at: ~N[2019-08-15 18:52:50],
-                   updated_at: ~N[2019-08-15 18:52:50]
-                 }
+                  id: 1,
+                  relation: %Relation{}
+                }
             """
             def unquote(name)(id, options \\ []),
               do: ResourceFunctions.get!(@repo, unquote(schema), id, options)
@@ -265,13 +256,13 @@ defmodule EctoResource do
 
           ## Examples
               #{name}(%#{schema_name}{id: 123}, %{attribute: "updated attribute"})
-              {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+              %#{schema_name}{id: 123, attribute: "updated attribute"}
 
               #{name}(%#{schema_name}{id: 123}, %{}, force: true)
-              {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+              %#{schema_name}{id: 123, attribute: "updated attribute"}
 
               #{name}(%#{schema_name}{id: 123}, %{}, prefix: "my_prefix")
-              {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+              %#{schema_name}{id: 123, attribute: "updated attribute"}
 
               #{name}(%#{schema_name}{id: 123}, %{invalid: "invalid"})
               ** (Ecto.InvalidChangesetError)
