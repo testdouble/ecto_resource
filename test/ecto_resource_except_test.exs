@@ -30,6 +30,8 @@ defmodule EctoResourceExceptTest do
             :delete,
             :delete!,
             :get,
+            :get_by,
+            :get_by!,
             :update,
             :update!
           ]
