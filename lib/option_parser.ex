@@ -42,6 +42,16 @@ defmodule EctoResource.OptionParser do
       name: "get",
       errorable: true
     },
+    get_by: %{
+      arity: 2,
+      name: "get_by",
+      errorable: false
+    },
+    get_by!: %{
+      arity: 2,
+      name: "get_by!",
+      errorable: true
+    },
     update: %{
       arity: 2,
       name: "update",
@@ -55,10 +65,10 @@ defmodule EctoResource.OptionParser do
   }
 
   @spec parse(String.t(), list() | atom()) :: map()
-  def parse(suffix, :read), do: parse(suffix, only: [:all, :get, :get!])
+  def parse(suffix, :read), do: parse(suffix, only: [:all, :get, :get!, :get_by, :get_by!])
 
   def parse(suffix, :read_write),
-    do: parse(suffix, only: [:all, :get, :get!, :change, :create, :create!, :update, :update!])
+    do: parse(suffix, only: [:all, :get, :get!, :get_by, :get_by!, :change, :create, :create!, :update, :update!])
 
   def parse(suffix, []) do
     @functions
@@ -102,6 +112,9 @@ defmodule EctoResource.OptionParser do
     :"all_#{suffix}"
   end
 
+  defp function_name(suffix, %{name: "get_by"}), do: :"get_#{suffix}_by"
+  defp function_name(suffix, %{name: "get_by!"}), do: :"get_#{suffix}_by!"
+
   defp function_name(suffix, %{name: name, errorable: true}),
     do: :"#{name}_#{suffix}!"
 
@@ -113,6 +126,12 @@ defmodule EctoResource.OptionParser do
     suffix = Inflex.pluralize(suffix)
     "all_#{suffix}/#{arity}"
   end
+
+  defp function_description(suffix, %{name: "get_by", arity: arity}),
+    do: "get_#{suffix}_by/#{arity}"
+
+  defp function_description(suffix, %{name: "get_by!", arity: arity}),
+    do: "get_#{suffix}_by!/#{arity}"
 
   defp function_description(suffix, %{name: name, arity: arity, errorable: true}),
     do: "#{name}_#{suffix}!/#{arity}"

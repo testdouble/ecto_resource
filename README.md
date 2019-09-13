@@ -99,6 +99,8 @@ This generates all the functions `EctoResource` has to offer:
 * `MyContext.delete_schema!/1`
 * `MyContext.get_schema/2`
 * `MyContext.get_schema!/2`
+* `MyContext.get_schema_by/2`
+* `MyContext.get_schema_by!/2`
 * `MyContext.update_schema/2`
 * `MyContext.update_schema!/2`
 
@@ -142,6 +144,8 @@ This generates all the functions excluding the given functions:
 * `MyContext.create_schema!/1`
 * `MyContext.delete_schema/1`
 * `MyContext.get_schema/2`
+* `MyContext.get_schema_by/2`
+* `MyContext.get_schema_by!/2`
 * `MyContext.get_schema!/2`
 * `MyContext.update_schema/2`
 * `MyContext.update_schema!/2`

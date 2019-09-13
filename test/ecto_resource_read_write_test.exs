@@ -36,10 +36,47 @@ defmodule EctoResourceReadWriteTest do
                   "create_my_schema!/1",
                   "get_my_schema/2",
                   "get_my_schema!/2",
+                  "get_my_schema_by/2",
+                  "get_my_schema_by!/2",
                   "update_my_schema/2",
                   "update_my_schema!/2"
                 ]}
              ]
+    end
+
+    test "generates a get/2 function for the defined resources" do
+      Repo
+      |> expect(:get, fn _query, 123, [] -> %MySchema{id: 123} end)
+
+      assert %MySchema{id: 123} = FakeContext.get_my_schema(123)
+    end
+
+    test "generates a get!/2 function for the defined resources" do
+      Repo
+      |> expect(:get!, fn _query, 123, [] -> %MySchema{id: 123} end)
+
+      assert %MySchema{id: 123} = FakeContext.get_my_schema!(123)
+    end
+
+    test "generates an all/1 function for the defined resources" do
+      Repo
+      |> expect(:all, fn _query, [] -> [%MySchema{id: 123}] end)
+
+      assert [%MySchema{id: 123}] = FakeContext.all_my_schemas()
+    end
+
+    test "generates a get_by/2 function for the defined resources" do
+      Repo
+      |> expect(:get_by, fn _schema, _attributes, _opts -> %MySchema{id: 123} end)
+
+      assert %MySchema{id: 123} = FakeContext.get_my_schema_by(id: 123)
+    end
+
+    test "generates a get_by!/2 function for the defined resources" do
+      Repo
+      |> expect(:get_by!, fn _schema, _attributes, _opts -> %MySchema{id: 123} end)
+
+      assert %MySchema{id: 123} = FakeContext.get_my_schema_by!(id: 123)
     end
 
     test "generates a change/1 function for the defined resources" do

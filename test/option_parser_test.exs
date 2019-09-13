@@ -38,6 +38,14 @@ defmodule EctoResource.OptionParserTest do
                  name: :get_suffix!,
                  description: "get_suffix!/2"
                },
+               get_by: %{
+                 name: :get_suffix_by,
+                 description: "get_suffix_by/2"
+               },
+               get_by!: %{
+                 name: :get_suffix_by!,
+                 description: "get_suffix_by!/2"
+               },
                update: %{
                  name: :update_suffix,
                  description: "update_suffix/2"
@@ -88,6 +96,14 @@ defmodule EctoResource.OptionParserTest do
                  name: :get_suffix!,
                  description: "get_suffix!/2"
                },
+               get_by: %{
+                 name: :get_suffix_by,
+                 description: "get_suffix_by/2"
+               },
+               get_by!: %{
+                 name: :get_suffix_by!,
+                 description: "get_suffix_by!/2"
+               },
                update: %{
                  name: :update_suffix,
                  description: "update_suffix/2"
@@ -112,6 +128,14 @@ defmodule EctoResource.OptionParserTest do
                get!: %{
                  name: :get_suffix!,
                  description: "get_suffix!/2"
+               },
+               get_by: %{
+                 name: :get_suffix_by,
+                 description: "get_suffix_by/2"
+               },
+               get_by!: %{
+                 name: :get_suffix_by!,
+                 description: "get_suffix_by!/2"
                }
              }
     end
@@ -129,6 +153,14 @@ defmodule EctoResource.OptionParserTest do
                get!: %{
                  name: :get_suffix!,
                  description: "get_suffix!/2"
+               },
+               get_by: %{
+                 name: :get_suffix_by,
+                 description: "get_suffix_by/2"
+               },
+               get_by!: %{
+                 name: :get_suffix_by!,
+                 description: "get_suffix_by!/2"
                },
                change: %{
                  name: :change_suffix,
@@ -174,6 +206,14 @@ defmodule EctoResource.OptionParserTest do
                get: %{
                  name: :get_suffix,
                  description: "get_suffix/2"
+               },
+               get_by: %{
+                 name: :get_suffix_by,
+                 description: "get_suffix_by/2"
+               },
+               get_by!: %{
+                 name: :get_suffix_by!,
+                 description: "get_suffix_by!/2"
                },
                update: %{
                  name: :update_suffix,
