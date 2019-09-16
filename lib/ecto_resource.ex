@@ -71,7 +71,7 @@ defmodule EctoResource do
   """
   defmacro resource(schema, options \\ []) do
     quote bind_quoted: [schema: schema, options: options] do
-      suffix = Helpers.underscore_module_name(schema)
+      suffix = OptionParser.create_suffix(schema, options)
       schema_name = Helpers.schema_name(schema)
       resources = OptionParser.parse(suffix, options)
       descriptions = Helpers.resource_descriptions(resources)
