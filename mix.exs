@@ -16,7 +16,7 @@ defmodule EctoResource.MixProject do
       elixir: "~> 1.8",
       package: package(),
       start_permanent: Mix.env() == :prod,
-      version: "1.1.1"
+      version: "1.2.0"
     ]
   end
 
