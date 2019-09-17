@@ -11,6 +11,7 @@ Unreleased
 
 ### Added
 - Now generates `get_by`, and `get_by!` functions
+- `suffix: false` option
 
 ### Changed
 

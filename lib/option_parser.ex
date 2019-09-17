@@ -1,141 +1,113 @@
 defmodule EctoResource.OptionParser do
   @moduledoc false
 
-  @functions %{
-    all: %{
-      arity: 1,
-      name: "all",
-      errorable: false
-    },
-    change: %{
-      arity: 1,
-      name: "change",
-      errorable: false
-    },
-    create: %{
-      arity: 1,
-      name: "create",
-      errorable: false
-    },
-    create!: %{
-      arity: 1,
-      name: "create",
-      errorable: true
-    },
-    delete: %{
-      arity: 1,
-      name: "delete",
-      errorable: false
-    },
-    delete!: %{
-      arity: 1,
-      name: "delete",
-      errorable: true
-    },
-    get: %{
-      arity: 2,
-      name: "get",
-      errorable: false
-    },
-    get!: %{
-      arity: 2,
-      name: "get",
-      errorable: true
-    },
-    get_by: %{
-      arity: 2,
-      name: "get_by",
-      errorable: false
-    },
-    get_by!: %{
-      arity: 2,
-      name: "get_by!",
-      errorable: true
-    },
-    update: %{
-      arity: 2,
-      name: "update",
-      errorable: false
-    },
-    update!: %{
-      arity: 2,
-      name: "update",
-      errorable: true
-    }
-  }
+  alias EctoResource.Helpers
+
+  @functions [
+    { "update!", 2 },
+    { "update", 2 },
+    { "get_by!", 2 },
+    { "get_by", 2 },
+    { "get!", 2 },
+    { "get", 2 },
+    { "delete!", 1 },
+    { "delete", 1 },
+    { "create!", 1 },
+    { "create", 1 },
+    { "change", 1 },
+    { "all", 1 }
+  ]
 
   @spec parse(String.t(), list() | atom()) :: map()
+
+  def parse(suffix, []) do
+    @functions
+    |> Enum.reduce(%{}, fn {function, arity}, acc ->
+      Map.put(acc, String.to_atom(function), %{
+        name: function_name(function, suffix),
+        description: function_description(function, arity, suffix)
+      })
+    end)
+  end
+
   def parse(suffix, :read), do: parse(suffix, only: [:all, :get, :get!, :get_by, :get_by!])
 
   def parse(suffix, :read_write),
     do: parse(suffix, only: [:all, :get, :get!, :get_by, :get_by!, :change, :create, :create!, :update, :update!])
 
-  def parse(suffix, []) do
-    @functions
-    |> Map.keys()
-    |> Enum.reduce(%{}, fn function, acc ->
-      accumulate_functions(acc, suffix, function)
-    end)
-  end
-
   def parse(suffix, options) do
     @functions
-    |> Map.keys()
     |> filter_functions(options)
-    |> Enum.reduce(%{}, fn function, acc ->
-      accumulate_functions(acc, suffix, function)
+    |> Enum.reduce(%{}, fn {function, arity}, acc ->
+      Map.put(acc, String.to_atom(function), %{
+        name: function_name(function, suffix),
+        description: function_description(function, arity, suffix)
+      })
     end)
   end
 
-  @spec accumulate_functions(map(), String.t(), atom()) :: map()
-  defp accumulate_functions(acc, suffix, function) do
-    fn_map = @functions[function]
+  @spec create_suffix(module, list()) :: String.t()
+  def create_suffix(_, [suffix: false]), do: ""
+  def create_suffix(schema, _), do: Helpers.underscore_module_name(schema)
 
-    Map.put(acc, function, %{
-      name: function_name(suffix, fn_map),
-      description: function_description(suffix, fn_map)
-    })
+  defp function_name(function, ""), do: String.to_atom(function)
+  defp function_name("all", suffix), do: String.to_atom("all_" <> Inflex.pluralize(suffix))
+
+  defp function_name("get_by", suffix) do
+    String.to_atom("get_#{suffix}_by")
   end
 
-  @spec filter_functions(list(String.t()), keyword(list())) :: list(String.t())
-  defp filter_functions(functions, except: filters) do
-    Enum.reject(functions, &Enum.member?(filters, &1))
+  defp function_name("get_by!", suffix) do
+    String.to_atom("get_#{suffix}_by!")
   end
 
-  defp filter_functions(functions, only: filters) do
-    Enum.filter(functions, &Enum.member?(filters, &1))
+  defp function_name(function, suffix) do
+    case function =~ ~r/!/ do
+      true -> String.replace_suffix(function, "!", "") <> "_" <> suffix <> "!"
+      false -> function <> "_" <> suffix
+    end
+    |> String.to_atom
   end
 
-  @spec function_name(String.t(), map()) :: atom()
-  defp function_name(suffix, %{name: "all"}) do
-    suffix = Inflex.pluralize(suffix)
-    :"all_#{suffix}"
+  defp function_description(function, arity, "") do
+   function <> "/" <> Integer.to_string(arity)
   end
 
-  defp function_name(suffix, %{name: "get_by"}), do: :"get_#{suffix}_by"
-  defp function_name(suffix, %{name: "get_by!"}), do: :"get_#{suffix}_by!"
-
-  defp function_name(suffix, %{name: name, errorable: true}),
-    do: :"#{name}_#{suffix}!"
-
-  defp function_name(suffix, %{name: name}),
-    do: :"#{name}_#{suffix}"
-
-  @spec function_description(String.t(), map()) :: String.t()
-  defp function_description(suffix, %{name: "all", arity: arity}) do
-    suffix = Inflex.pluralize(suffix)
-    "all_#{suffix}/#{arity}"
+  defp function_description("all", arity, suffix) do
+    "all_" <> Inflex.pluralize(suffix) <> "/" <> Integer.to_string(arity)
   end
 
-  defp function_description(suffix, %{name: "get_by", arity: arity}),
-    do: "get_#{suffix}_by/#{arity}"
+  defp function_description("get_by", arity, suffix) do
+    arity = Integer.to_string(arity)
+   "get_" <> suffix <> "_by" <> "/" <> arity
+  end
 
-  defp function_description(suffix, %{name: "get_by!", arity: arity}),
-    do: "get_#{suffix}_by!/#{arity}"
+  defp function_description("get_by!", arity, suffix) do
+     arity = Integer.to_string(arity)
+    "get_" <> suffix <> "_by!" <> "/" <> arity
+  end
 
-  defp function_description(suffix, %{name: name, arity: arity, errorable: true}),
-    do: "#{name}_#{suffix}!/#{arity}"
+  defp function_description(function, arity, suffix) do
+    arity = Integer.to_string(arity)
+    case function =~ ~r/!/ do
+      true -> String.replace_suffix(function, "!", "") <> "_" <> suffix <> "!" <> "/" <> arity
+      false -> function <> "_" <> suffix <> "/" <> arity
+    end
+  end
 
-  defp function_description(suffix, %{name: name, arity: arity}),
-    do: "#{name}_#{suffix}/#{arity}"
+  defp filter_functions(functions, [except: filters]) do
+    Enum.reject(functions, fn {function, _} ->
+      function = String.to_atom(function)
+      Enum.member?(filters, function)
+    end)
+  end
+
+  defp filter_functions(functions, [only: filters]) do
+    Enum.filter(functions, fn {function, _} ->
+      function = String.to_atom(function)
+      Enum.member?(filters, function)
+    end)
+  end
+
+  defp filter_functions(functions, _), do: functions
 end

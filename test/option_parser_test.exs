@@ -243,4 +243,17 @@ defmodule EctoResource.OptionParserTest do
              }
     end
   end
+
+  describe "create_suffix/2" do
+    defmodule TestSchema do
+    end
+
+    test "with no options, it returns the schema name lowercased, prefixed with an underscore" do
+      assert OptionParser.create_suffix(TestSchema, []) == "test_schema"
+    end
+
+    test "with suffix false option, it returns an empty string" do
+      assert OptionParser.create_suffix(TestSchema, suffix: false) == ""
+    end
+  end
 end
