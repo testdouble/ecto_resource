@@ -327,6 +327,32 @@ iex> get_person!(1, preloads: [:address])
 }
 ```
 
+#### get_person_by
+
+Fetches a single `%Person{}` from the data store where the attributes match the
+given values.
+
+```elixir
+iex> get_person_by(%{name: "Chuck Norris"})
+%Person{name: "Chuck Norris"}
+
+iex> get_person_by(%{name: "Doesn't Exist"})
+nil
+```
+
+#### get_person_by!
+
+Fetches a single `%Person{}` from the data store where the attributes match the
+given values. Raises an `Ecto.NoResultsError` if the record does not exist
+
+```elixir
+iex> get_person_by!(%{name: "Chuck Norris"})
+%Person{name: "Chuck Norris"}
+
+iex> get_person_by!(%{name: "Doesn't Exist"})
+** (Ecto.NoResultsError)
+```
+
 #### update_person
 
 Updates a given %Person{} with the given attributes, returns an `:ok`/`:error` tuple.
