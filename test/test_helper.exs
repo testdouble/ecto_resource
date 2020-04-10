@@ -1,2 +1,2 @@
 ExUnit.start()
-Mox.defmock(MockRepo, for: Ecto.Repo)
+Ecto.Adapters.SQL.Sandbox.mode(EctoResource.TestRepo, :manual)

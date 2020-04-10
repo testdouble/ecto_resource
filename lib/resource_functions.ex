@@ -2,10 +2,15 @@ defmodule EctoResource.ResourceFunctions do
   @moduledoc false
   import Ecto.Query
 
-  @spec change(module, Ecto.Schema.t()) :: Ecto.Changeset.t()
-  def change(schema, changable) do
+  @spec change(module, Ecto.Schema.t(), map()) :: Ecto.Changeset.t()
+  def change(schema, changable, changes) do
     changable
-    |> schema.changeset(%{})
+    |> schema.changeset(changes)
+  end
+
+  @spec changeset(Ecto.Schema.t()) :: Ecto.Changeset.t()
+  def changeset(schema) do
+    schema.changeset(struct(schema), %{})
   end
 
   @spec create!(Ecto.Repo.t(), module, map()) ::
