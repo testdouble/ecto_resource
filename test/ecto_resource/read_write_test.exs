@@ -1,4 +1,4 @@
-defmodule EctoResource.DefaultsTestContext.People do
+defmodule EctoResource.ReadWriteContext.People do
   @moduledoc false
 
   alias EctoResource.TestRepo
@@ -7,15 +7,15 @@ defmodule EctoResource.DefaultsTestContext.People do
   use EctoResource
 
   using_repo TestRepo do
-    resource(Person)
+    resource(Person, :read_write)
   end
 end
 
-defmodule EctoResource.DefaultsTest do
+defmodule EctoResource.ReadWrite do
   use EctoResource.RepoCase
 
   alias EctoResource.TestSchema.Person
-  alias EctoResource.DefaultsTestContext.People
+  alias EctoResource.ReadWriteContext.People
 
   @person_attributes %{
     first_name: "Test",
@@ -87,56 +87,26 @@ defmodule EctoResource.DefaultsTest do
   end
 
   describe "delete" do
-    test "with an existing record, it deletes a given record" do
+    test "it doesn't create a delete method" do
       {:ok, person} =
         %Person{}
         |> Person.changeset(@person_attributes)
         |> Repo.insert()
 
-      assert Repo.all(Person) == [person]
-
-      People.delete_person(person)
-
-      assert Repo.all(Person) == []
-    end
-
-    test "with a non-existent record, it raises an error" do
-      {:ok, person} =
-        %Person{}
-        |> Person.changeset(@person_attributes)
-        |> Repo.insert()
-
-      Repo.delete(person)
-
-      assert_raise Ecto.StaleEntryError, fn ->
+      assert_raise UndefinedFunctionError, fn ->
         People.delete_person(person)
       end
     end
   end
 
   describe "delete!" do
-    test "with an existing record it deletes the given record" do
+    test "doesn't create a delete! method" do
       {:ok, person} =
         %Person{}
         |> Person.changeset(@person_attributes)
         |> Repo.insert()
 
-      assert Repo.all(Person) == [person]
-
-      People.delete_person!(person)
-
-      assert Repo.all(Person) == []
-    end
-
-    test "with a non-existent record, it raises an error" do
-      {:ok, person} =
-        %Person{}
-        |> Person.changeset(@person_attributes)
-        |> Repo.insert()
-
-      Repo.delete(person)
-
-      assert_raise Ecto.StaleEntryError, fn ->
+      assert_raise UndefinedFunctionError, fn ->
         People.delete_person!(person)
       end
     end

@@ -114,7 +114,7 @@ defmodule EctoResource do
 
           :change ->
             @doc """
-            Creates a #{schema_name} changeset.
+            Creates a #{schema_name} changeset from an existing schema struct.
 
                 #{name}(%#{schema_name}{}, %{})
 
@@ -132,8 +132,23 @@ defmodule EctoResource do
               ResourceFunctions.change(unquote(schema), changeable, changes)
             end
 
-            @spec changeset() :: Ecto.Changeset.t()
-            def changeset() do
+          :changeset ->
+
+            @doc """
+            Creates a blank changeset.
+
+                changeset()
+
+                #Ecto.Changeset<
+                  action: nil,
+                  changes: %{},
+                  errors: [],
+                  data: ##{schema_name}<>,
+                  valid?: true
+                >
+            """
+            @spec unquote(name)() :: Ecto.Changeset.t()
+            def unquote(name)() do
               ResourceFunctions.changeset(unquote(schema))
             end
 
@@ -164,6 +179,7 @@ defmodule EctoResource do
                 #{name}(%{invalid: "invalid"})
                 ** (Ecto.InvalidChangesetError)
             """
+            @spec unquote(name)(map()) :: Ecto.Schema.t() | Ecto.InvalidChangesetError
             def unquote(name)(attributes) do
               ResourceFunctions.create!(@repo, unquote(schema), attributes)
             end

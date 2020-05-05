@@ -19,6 +19,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+[1.3.0]
+------------
+
+### Added
+- `changeset` convenience function added
+
+### Changed
+
+### Removed
+
+### Fixed
+
+### Security
+
 [1.2.0] - 2019-09-17
 --------------------
 ### Added

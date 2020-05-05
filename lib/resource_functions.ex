@@ -13,7 +13,7 @@ defmodule EctoResource.ResourceFunctions do
     schema.changeset(struct(schema), %{})
   end
 
-  @spec create!(Ecto.Repo.t(), module, map()) ::
+  @spec create(Ecto.Repo.t(), module, map()) ::
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
   def create(repo, schema, attributes) do
     schema

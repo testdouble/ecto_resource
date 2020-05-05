@@ -1,4 +1,4 @@
-defmodule EctoResource.DefaultsTestContext.People do
+defmodule EctoResource.ExceptFilterTestContext.People do
   @moduledoc false
 
   alias EctoResource.TestRepo
@@ -7,15 +7,15 @@ defmodule EctoResource.DefaultsTestContext.People do
   use EctoResource
 
   using_repo TestRepo do
-    resource(Person)
+    resource(Person, except: [:change, :changeset])
   end
 end
 
-defmodule EctoResource.DefaultsTest do
+defmodule EctoResource.ExceptFilterTest do
   use EctoResource.RepoCase
 
   alias EctoResource.TestSchema.Person
-  alias EctoResource.DefaultsTestContext.People
+  alias EctoResource.ExceptFilterTestContext.People
 
   @person_attributes %{
     first_name: "Test",
@@ -40,23 +40,24 @@ defmodule EctoResource.DefaultsTest do
   end
 
   describe "change" do
-    test "it returns a changeset with changes" do
+    test "doesn't create a change function" do
       person = %Person{
         first_name: "Initial",
         last_name: "Value",
         age: 0
       }
 
-      %{changes: changes} = People.change_person(person, @person_attributes)
-
-      assert changes == @person_attributes
+      assert_raise UndefinedFunctionError, fn ->
+        People.change_person(person, @person_attributes)
+      end
     end
   end
 
   describe "changeset" do
-    test "it returns an empty changeset" do
-      expected_changeset = Person.changeset(%Person{}, %{})
-      assert People.person_changeset() == expected_changeset
+    test "it doesn't create a changeset function" do
+      assert_raise UndefinedFunctionError, fn ->
+        People.person_changeset()
+      end
     end
   end
 

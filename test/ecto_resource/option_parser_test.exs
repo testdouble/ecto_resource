@@ -14,6 +14,10 @@ defmodule EctoResource.OptionParserTest do
                  name: :change_suffix,
                  description: "change_suffix/1"
                },
+               changeset: %{
+                name: :suffix_changeset,
+                description: "suffix_changeset/0"
+               },
                create: %{
                  name: :create_suffix,
                  description: "create_suffix/1"
@@ -83,6 +87,10 @@ defmodule EctoResource.OptionParserTest do
                change: %{
                  name: :change_suffix,
                  description: "change_suffix/1"
+               },
+               changeset: %{
+                 name: :suffix_changeset,
+                 description: "suffix_changeset/0"
                },
                delete: %{
                  name: :delete_suffix,
@@ -166,6 +174,10 @@ defmodule EctoResource.OptionParserTest do
                  name: :change_suffix,
                  description: "change_suffix/1"
                },
+               changeset: %{
+                 name: :suffix_changeset,
+                 description: "suffix_changeset/0"
+               },
                create: %{
                  name: :create_suffix,
                  description: "create_suffix/1"
@@ -194,6 +206,10 @@ defmodule EctoResource.OptionParserTest do
                change: %{
                  name: :change_suffix,
                  description: "change_suffix/1"
+               },
+               changeset: %{
+                 name: :suffix_changeset,
+                 description: "suffix_changeset/0"
                },
                create: %{
                  name: :create_suffix,

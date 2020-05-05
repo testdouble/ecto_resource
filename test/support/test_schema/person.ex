@@ -10,6 +10,8 @@ defmodule EctoResource.TestSchema.Person do
 
   @doc false
   def changeset(person, attrs) do
-    cast(person, attrs, [:first_name, :last_name, :age])
+    person
+    |> cast(attrs, [:first_name, :last_name, :age])
+    |> validate_required([:first_name, :last_name, :age])
   end
 end
