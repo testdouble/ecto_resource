@@ -6,11 +6,11 @@ defmodule EctoResource.Application do
   use Application
 
   def start(_type, _args) do
-    children = [EctoResource.TestRepo]
-
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
+    children = get_children(Mix.env())
     opts = [strategy: :one_for_one, name: EctoResource.Supervisor]
     Supervisor.start_link(children, opts)
   end
+
+  defp get_children(:test), do: [EctoResource.TestRepo]
+  defp get_children(_), do: []
 end
