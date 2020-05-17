@@ -65,7 +65,7 @@ defmodule EctoResource.MixProject do
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:inflex, "~> 2.0.0"},
       {:mox, "~> 0.5.0", only: :test},
-      {:postgrex, ">= 0.0.0", only: [:dev, :test]}
+      {:postgrex, ">= 0.0.0", only: [:test]}
     ]
   end
 end
