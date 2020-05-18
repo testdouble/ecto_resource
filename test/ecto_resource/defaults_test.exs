@@ -51,6 +51,20 @@ defmodule EctoResource.DefaultsTest do
 
       assert changes == @person_attributes
     end
+
+    test "it accpets keyword lists" do
+      person = %Person{
+        first_name: "Initial",
+        last_name: "Value",
+        age: 0
+      }
+
+      person_attributes_list = Map.to_list(@person_attributes)
+
+      %{changes: changes} = People.change_person(person, person_attributes_list)
+
+      assert changes == @person_attributes
+    end
   end
 
   describe "changeset" do
@@ -70,10 +84,17 @@ defmodule EctoResource.DefaultsTest do
     test "with invalid attributes, it returns an error tuple with a changeset" do
       assert {:error, %Ecto.Changeset{}} = People.create_person(%{})
     end
+
+    test "accepts keyword lists" do
+      person_attributes_list = Map.to_list(@person_attributes)
+      {:ok, person} = People.create_person(person_attributes_list)
+
+      assert Repo.all(Person) == [person]
+    end
   end
 
   describe "create!" do
-    test "whith valid attributes, it creates a new record" do
+    test "with valid attributes, it creates a new record" do
       person = People.create_person!(@person_attributes)
 
       assert Repo.all(Person) == [person]
@@ -83,6 +104,13 @@ defmodule EctoResource.DefaultsTest do
       assert_raise Ecto.InvalidChangesetError, fn ->
         People.create_person!(%{})
       end
+    end
+
+    test "it accepts keyword lists" do
+      person_attributes_list = Map.to_list(@person_attributes)
+      person = People.create_person!(person_attributes_list)
+
+      assert Repo.all(Person) == [person]
     end
   end
 
@@ -187,6 +215,15 @@ defmodule EctoResource.DefaultsTest do
     test "with a non-existent record, it returns nil" do
       assert People.get_person_by(age: @person_attributes.age) == nil
     end
+
+    test "it accepts maps" do
+      {:ok, person} =
+        Person
+        |> struct(@person_attributes)
+        |> Repo.insert()
+
+      assert People.get_person_by(%{age: @person_attributes.age}) == person
+    end
   end
 
   describe "get_by!" do
@@ -197,6 +234,15 @@ defmodule EctoResource.DefaultsTest do
         |> Repo.insert()
 
       assert People.get_person_by!(age: @person_attributes.age) == person
+    end
+
+    test "it accepts maps" do
+      {:ok, person} =
+        Person
+        |> struct(@person_attributes)
+        |> Repo.insert()
+
+      assert People.get_person_by!(%{age: @person_attributes.age}) == person
     end
   end
 
@@ -226,6 +272,21 @@ defmodule EctoResource.DefaultsTest do
 
       refute changeset.valid?
     end
+
+    test "accepts keyword lists" do
+      {:ok, person} =
+        Person
+        |> struct(@person_attributes)
+        |> Repo.insert()
+
+      {:ok, updated_person} =
+        People.update_person(person, Map.to_list(@updated_person_attributes))
+
+      assert person.id == updated_person.id
+      assert person.first_name != updated_person.first_name
+      assert person.last_name != updated_person.last_name
+      assert person.age != updated_person.age
+    end
   end
 
   describe "update!" do
@@ -252,6 +313,20 @@ defmodule EctoResource.DefaultsTest do
       assert_raise Ecto.InvalidChangesetError, fn ->
         People.update_person!(person, %{first_name: nil, last_name: nil, age: nil})
       end
+    end
+
+    test "accepts keyword lists" do
+      {:ok, person} =
+        Person
+        |> struct(@person_attributes)
+        |> Repo.insert()
+
+      updated_person = People.update_person!(person, Map.to_list(@updated_person_attributes))
+
+      assert person.id == updated_person.id
+      assert person.first_name != updated_person.first_name
+      assert person.last_name != updated_person.last_name
+      assert person.age != updated_person.age
     end
   end
 end

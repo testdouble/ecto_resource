@@ -50,6 +50,10 @@ defmodule EctoResource do
       end
 
       using(Repo) do
+        resource(Schema, suffix: false)
+      end
+
+      using(Repo) do
         resource(Schema, only: [:get])
       end
 
@@ -126,14 +130,23 @@ defmodule EctoResource do
                   valid?: true
                 >
 
+                #{name}(%#{schema_name}{}, [])
+
+                #Ecto.Changeset<
+                  action: nil,
+                  changes: %{},
+                  errors: [],
+                  data: ##{schema_name}<>,
+                  valid?: true
+                >
+
             """
-            @spec unquote(name)(Ecto.Schema.t(), map()) :: Ecto.Changeset.t()
+            @spec unquote(name)(Ecto.Schema.t(), map() | Keyword.t()) :: Ecto.Changeset.t()
             def unquote(name)(changeable, changes) do
               ResourceFunctions.change(unquote(schema), changeable, changes)
             end
 
           :changeset ->
-
             @doc """
             Creates a blank changeset.
 
@@ -160,10 +173,14 @@ defmodule EctoResource do
                 #{name}(%{})
                 {:ok, %#{schema_name}{}}
 
+                #{name}([])
+                {:ok, %#{schema_name}{}}
+
                 #{name}(%{invalid: "invalid"})
                   {:error, %Ecto.Changeset{}}
             """
-            @spec unquote(name)(map()) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+            @spec unquote(name)(map() | Keyword.t()) ::
+                    {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
             def unquote(name)(attributes) do
               ResourceFunctions.create(@repo, unquote(schema), attributes)
             end
@@ -176,10 +193,14 @@ defmodule EctoResource do
                 #{name}(%{})
                 %#{schema_name}{}
 
+                #{name}([])
+                %#{schema_name}{}
+
                 #{name}(%{invalid: "invalid"})
                 ** (Ecto.InvalidChangesetError)
             """
-            @spec unquote(name)(map()) :: Ecto.Schema.t() | Ecto.InvalidChangesetError
+            @spec unquote(name)(map() | Keyword.t()) ::
+                    Ecto.Schema.t() | Ecto.InvalidChangesetError
             def unquote(name)(attributes) do
               ResourceFunctions.create!(@repo, unquote(schema), attributes)
             end
@@ -308,6 +329,9 @@ defmodule EctoResource do
                 #{name}(%#{schema_name}{id: 123}, %{attribute: "updated attribute"})
                 {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
 
+                #{name}(%#{schema_name}{id: 123}, attribute: "updated attribute")
+                {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
+
                 #{name}(%#{schema_name}{id: 123}, %{}, force: true)
                 {:ok, %#{schema_name}{id: 123, attribute: "updated attribute"}}
 
@@ -317,7 +341,7 @@ defmodule EctoResource do
                 #{name}(%#{schema_name}{id: 123}, %{invalid: "invalid"})
                 {:error, %Ecto.Changeset{}}
             """
-            @spec unquote(name)(Ecto.Schema.t(), map()) ::
+            @spec unquote(name)(Ecto.Schema.t(), map() | Keyword.t()) ::
                     {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
             def unquote(name)(struct, attributes) do
               ResourceFunctions.update(@repo, unquote(schema), struct, attributes)
@@ -341,6 +365,8 @@ defmodule EctoResource do
             """
 
           :update! ->
+            @spec unquote(name)(Ecto.Schema.t(), map() | Keyword.t()) ::
+                    Ecto.Schema.t() | Ecto.InvalidChangesetError
             def unquote(name)(struct, attributes) do
               ResourceFunctions.update!(@repo, unquote(schema), struct, attributes)
             end
