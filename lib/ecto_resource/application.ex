@@ -6,9 +6,11 @@ defmodule EctoResource.Application do
   use Application
 
   def start(_type, _args) do
-    children = get_children(Mix.env())
-    opts = [strategy: :one_for_one, name: EctoResource.Supervisor]
-    Supervisor.start_link(children, opts)
+    if Mix.env() != :prod do
+      children = get_children(Mix.env())
+      opts = [strategy: :one_for_one, name: EctoResource.Supervisor]
+      Supervisor.start_link(children, opts)
+    end
   end
 
   defp get_children(:test), do: [EctoResource.TestRepo]

@@ -50,10 +50,16 @@ defmodule EctoResource.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [
-      extra_applications: [:logger, :postgrex, :ecto],
-      mod: {EctoResource.Application, []}
-    ]
+    case Mix.env() == :prod do
+      true ->
+        [extra_applications: [:logger, :ecto]]
+
+      false ->
+        [
+          extra_applications: [:logger, :postgrex, :ecto],
+          mod: {EctoResource.Application, []}
+        ]
+    end
   end
 
   # Run "mix help deps" to learn about dependencies.
