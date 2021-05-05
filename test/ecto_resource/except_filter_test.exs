@@ -34,8 +34,10 @@ defmodule EctoResource.ExceptFilterTest do
       person = struct(Person, @person_attributes)
 
       Repo.insert(person)
+      [first_person] = results = People.all_people()
 
-      assert [person] = People.all_people()
+      assert length(results) == 1
+      assert person.first_name == first_person.first_name
     end
   end
 

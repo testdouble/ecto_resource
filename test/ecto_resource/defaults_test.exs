@@ -32,10 +32,12 @@ defmodule EctoResource.DefaultsTest do
   describe "all" do
     test "it returns all the records" do
       person = struct(Person, @person_attributes)
-
       Repo.insert(person)
+      result = People.all_people()
+      [first_person] = result
 
-      assert [person] = People.all_people()
+      assert length(result) == 1
+      assert first_person.first_name == person.first_name
     end
   end
 

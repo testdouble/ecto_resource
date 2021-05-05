@@ -17,8 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 ### Fixed
+- Fixed some bad tests to have better assertions
 
 ### Security
+
 
 [1.3.0]
 ------------
