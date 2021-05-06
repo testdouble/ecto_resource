@@ -396,7 +396,7 @@ If you discover any bugs, feel free to create an issue on [GitHub](https://githu
 
 * Fork it (https://github.com/daytonn/ecto_resource/fork)
 * Add upstream remote (`git remote add upstream git@github.com:daytonn/ecto_resource.git`)
-* Make sure you're up-to-date with upstream master (`git pull upstream master`)
+* Make sure you're up-to-date with upstream main (`git pull upstream main`)
 * Create your feature branch (`git checkout -b feature/fooBar`)
 * Commit your changes (`git commit -am 'Add some fooBar'`)
 * Push to the branch (`git push origin feature/fooBar`)
@@ -410,4 +410,4 @@ If you discover any bugs, feel free to create an issue on [GitHub](https://githu
 
 License
 -------
-[Apache 2.0](https://raw.githubusercontent.com/daytonn/ecto_resource/master/LICENSE.txt)
+[Apache 2.0](https://raw.githubusercontent.com/daytonn/ecto_resource/main/LICENSE.txt)
