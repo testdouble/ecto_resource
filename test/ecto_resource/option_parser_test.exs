@@ -15,8 +15,8 @@ defmodule EctoResource.OptionParserTest do
                  description: "change_suffix/1"
                },
                changeset: %{
-                name: :suffix_changeset,
-                description: "suffix_changeset/0"
+                 name: :suffix_changeset,
+                 description: "suffix_changeset/0"
                },
                create: %{
                  name: :create_suffix,
@@ -270,6 +270,11 @@ defmodule EctoResource.OptionParserTest do
 
     test "with suffix false option, it returns an empty string" do
       assert OptionParser.create_suffix(TestSchema, suffix: false) == ""
+    end
+
+    test "with suffix false option and other options" do
+      assert OptionParser.create_suffix(TestSchema, suffix: false, except: [:create!, :create]) ==
+               ""
     end
   end
 end
