@@ -258,6 +258,22 @@ defmodule EctoResource.OptionParserTest do
                }
              }
     end
+
+    test "when given suffix option and other options" do
+      assert OptionParser.parse("", suffix: false, except: [:create!, :create]) == %{
+               all: %{name: :all, description: "all/1"},
+               change: %{name: :change, description: "change/1"},
+               changeset: %{name: :changeset, description: "changeset/0"},
+               delete: %{name: :delete, description: "delete/1"},
+               get: %{name: :get, description: "get/2"},
+               get_by: %{name: :get_by, description: "get_by/2"},
+               get_by!: %{name: :get_by!, description: "get_by!/2"},
+               update: %{name: :update, description: "update/2"},
+               delete!: %{name: :delete!, description: "delete!/1"},
+               get!: %{name: :get!, description: "get!/2"},
+               update!: %{name: :update!, description: "update!/2"}
+             }
+    end
   end
 
   describe "create_suffix/2" do

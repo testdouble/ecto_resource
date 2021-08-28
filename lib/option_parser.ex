@@ -128,17 +128,21 @@ defmodule EctoResource.OptionParser do
     end
   end
 
-  defp filter_functions(functions, except: filters) do
+  defp filter_functions(functions, options) when is_list(options) do
+    filter_functions(functions, Enum.into(options, %{}))
+  end
+
+  defp filter_functions(functions, %{except: excluded_functions}) do
     Enum.reject(functions, fn {function, _} ->
       function = String.to_atom(function)
-      Enum.member?(filters, function)
+      Enum.member?(excluded_functions, function)
     end)
   end
 
-  defp filter_functions(functions, only: filters) do
+  defp filter_functions(functions, %{only: included_functions}) do
     Enum.filter(functions, fn {function, _} ->
       function = String.to_atom(function)
-      Enum.member?(filters, function)
+      Enum.member?(included_functions, function)
     end)
   end
 
