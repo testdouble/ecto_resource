@@ -6,7 +6,9 @@ defmodule EctoResource do
   """
 
   alias __MODULE__
-  alias EctoResource.{Helpers, OptionParser, ResourceFunctions}
+  alias EctoResource.Helpers
+  alias EctoResource.OptionParser
+  alias EctoResource.ResourceFunctions
 
   @doc """
   Macro to import `EctoResource.using_repo/2`
