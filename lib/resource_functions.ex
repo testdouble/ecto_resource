@@ -106,10 +106,12 @@ defmodule EctoResource.ResourceFunctions do
   def all(repo, schema, options \\ []) do
     preloads = Keyword.get(options, :preloads, [])
     order_by = Keyword.get(options, :order_by, [])
+    where = Keyword.get(options, :where, [])
 
     schema
     |> preload(^preloads)
     |> order_by(^order_by)
+    |> where(^where)
     |> repo.all([])
   end
 
