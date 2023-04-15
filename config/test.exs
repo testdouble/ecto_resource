@@ -1,11 +1,11 @@
-use Mix.Config
+import Config
 
-config :ecto_resource, ecto_repos: [EctoResource.TestRepo]
+config :ecto_cooler, ecto_repos: [EctoCooler.TestRepo]
 
-config :ecto_resource, EctoResource.TestRepo,
+config :ecto_cooler, EctoCooler.TestRepo,
   username: "postgres",
   password: "postgres",
-  database: "ecto_resource_test",
+  database: "ecto_cooler_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 

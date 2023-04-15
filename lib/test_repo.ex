@@ -1,5 +1,5 @@
-defmodule EctoResource.TestRepo do
+defmodule EctoCooler.TestRepo do
   use Ecto.Repo,
-    otp_app: :ecto_resource,
+    otp_app: :ecto_cooler,
     adapter: Ecto.Adapters.Postgres
 end

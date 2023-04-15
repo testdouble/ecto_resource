@@ -1,7 +1,7 @@
-defmodule EctoResource.OptionParserTest do
+defmodule EctoCooler.OptionParserTest do
   use ExUnit.Case
 
-  alias EctoResource.OptionParser
+  alias EctoCooler.OptionParser
 
   describe "parse/1" do
     test "when given the an empty list" do

@@ -1,3 +1,5 @@
-use Mix.Config
+import Config
 
-import_config "#{Mix.env()}.exs"
+config :ecto_cooler, env: config_env()
+
+import_config "#{config_env()}.exs"

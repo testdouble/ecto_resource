@@ -1,7 +1,7 @@
-Supervisor.start_link([{EctoResource.TestRepo, []}],
+Supervisor.start_link([{EctoCooler.TestRepo, []}],
   strategy: :one_for_one,
-  name: EctoResource.Supervisor
+  name: EctoCooler.Supervisor
 )
 
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(EctoResource.TestRepo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(EctoCooler.TestRepo, :manual)

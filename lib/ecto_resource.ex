@@ -1,4 +1,4 @@
-defmodule EctoResource do
+defmodule EctoCooler do
   @moduledoc """
   This module provides a DSL to easily generate the basic functions for a schema.
   This allows the context to focus on interesting, atypical implementations rather
@@ -6,19 +6,19 @@ defmodule EctoResource do
   """
 
   alias __MODULE__
-  alias EctoResource.Helpers
-  alias EctoResource.OptionParser
-  alias EctoResource.ResourceFunctions
+  alias EctoCooler.Helpers
+  alias EctoCooler.OptionParser
+  alias EctoCooler.ResourceFunctions
 
   @doc """
-  Macro to import `EctoResource.using_repo/2`
+  Macro to import `EctoCooler.using_repo/2`
 
   ## Examples
-      use EctoResource
+      use EctoCooler
   """
   defmacro __using__(_) do
     quote do
-      import EctoResource, only: [using_repo: 2]
+      import EctoCooler, only: [using_repo: 2]
     end
   end
 
@@ -35,7 +35,7 @@ defmodule EctoResource do
       Module.register_attribute(__MODULE__, :repo, [])
       Module.put_attribute(__MODULE__, :repo, unquote(repo))
       Module.register_attribute(__MODULE__, :resources, accumulate: true)
-      import EctoResource, only: [resource: 2, resource: 1]
+      import EctoCooler, only: [resource: 2, resource: 1]
       unquote(block)
       def __resource__(:resources), do: @resources
       Module.delete_attribute(__MODULE__, :resources)

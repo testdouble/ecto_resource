@@ -1,4 +1,4 @@
-EctoResource
+EctoCooler
 ============
 
 * [About](#about)
@@ -30,14 +30,14 @@ This can become problematic for a few reasons:
 * These functions may tend to accumulate drift from the standard API by inviting edits for new use-cases, reducing the usefulness of naming conventions.
 * The burden of locally testing wrapper functions, yields low value for the writing and maintainence investment.
 
-In short, at best this code is redundant and at worst is a deviant entanglement of modified conventions. All of which amounts to a more-painful development experience. `EctoResource` was created to ease this pain.
+In short, at best this code is redundant and at worst is a deviant entanglement of modified conventions. All of which amounts to a more-painful development experience. `EctoCooler` was created to ease this pain.
 
 Features
 --------
 
 ### Generate CRUD functions for a given `Ecto.Repo` and `Ecto.Schema`
 
-`EctoResource` can be used to generate CRUD functions for a given `Ecto.Repo` and `Ecto.Schema`. By default it will create every function needed to create, read, update, and delete the resouce. It includes the `!` version of each function (where relevant) that will raise an error instead of return a value.
+`EctoCooler` can be used to generate CRUD functions for a given `Ecto.Repo` and `Ecto.Schema`. By default it will create every function needed to create, read, update, and delete the resouce. It includes the `!` version of each function (where relevant) that will raise an error instead of return a value.
 
 ### Allow customization of generated resources
 
@@ -45,7 +45,7 @@ You can optionally include or exclude specific functions to generate exactly the
 
 ### Automatic pluralization
 
-For methods that return a list of records, it seems natural to use a plural name. For example, take a function named `MyContext.all_schema`. While this works, it makes the grammar a bit awkward and distracts from the intent of the function. `EctoResource` uses `Inflex` when generating functions to create readable english function names automatically. For example, given the schema `Person`, a function named `all_people/1` is generated.
+For methods that return a list of records, it seems natural to use a plural name. For example, take a function named `MyContext.all_schema`. While this works, it makes the grammar a bit awkward and distracts from the intent of the function. `EctoCooler` uses `Inflex` when generating functions to create readable english function names automatically. For example, given the schema `Person`, a function named `all_people/1` is generated.
 
 ### Generate documentation for each generated function
 
@@ -53,21 +53,21 @@ Every function generated includes documentation so your application's documentat
 
 ### Reflection metadata
 
-A function is generated for each resource defined by `EctoResource` to list all the functions generated for each `Ecto.Repo` and `Ecto.Schema`. A mix task is included to provide easy access to this information.
+A function is generated for each resource defined by `EctoCooler` to list all the functions generated for each `Ecto.Repo` and `Ecto.Schema`. A mix task is included to provide easy access to this information.
 
 ### Supports any module
 
-While `EctoResource` was designed for [Phoenix Contexts](https://hexdocs.pm/phoenix/contexts.html) in mind, It can be used in any Elixir module.
+While `EctoCooler` was designed for [Phoenix Contexts](https://hexdocs.pm/phoenix/contexts.html) in mind, It can be used in any Elixir module.
 
 Installation
 ------------
 
-This package is available in [Hex](https://hex.pm/), the package can be installed by adding ecto_resource to your list of dependencies in mix.exs:
+This package is available in [Hex](https://hex.pm/), the package can be installed by adding ecto_cooler to your list of dependencies in mix.exs:
 
 ```elixir
     def deps do
       [
-        {:ecto_resource, "~> 1.1.0"}
+        {:ecto_cooler, "~> 1.1.0"}
       ]
     end
 ```
@@ -75,13 +75,13 @@ This package is available in [Hex](https://hex.pm/), the package can be installe
 Usage
 -----
 
-### Basic usage - generate all `EctoResource` functions
+### Basic usage - generate all `EctoCooler` functions
 
 ```elixir
 defmodule MyApp.MyContext do
   alias MyApp.Repo
   alias MyApp.Schema
-  use EctoResource
+  use EctoCooler
 
   using_repo(Repo) do
     resource(Schema)
@@ -89,7 +89,7 @@ defmodule MyApp.MyContext do
 end
 ```
 
-This generates all the functions `EctoResource` has to offer:
+This generates all the functions `EctoCooler` has to offer:
 
 * `MyContext.all_schemas/1`
 * `MyContext.change_schema/1`
@@ -110,7 +110,7 @@ This generates all the functions `EctoResource` has to offer:
 defmodule MyApp.MyContext do
   alias MyApp.Repo
   alias MyApp.Schema
-  use EctoResource
+  use EctoCooler
 
   using_repo(Repo) do
     resource(Schema, only: [:create, :delete!])
@@ -129,7 +129,7 @@ This generates only the given functions:
 defmodule MyApp.MyContext do
   alias MyApp.Repo
   alias MyApp.Schema
-  use EctoResource
+  use EctoCooler
 
   using_repo(Repo) do
     resource(Schema, except: [:create, :delete!])
@@ -156,7 +156,7 @@ This generates all the functions excluding the given functions:
 defmodule MyApp.MyContext do
   alias MyApp.Repo
   alias MyApp.Schema
-  use EctoResource
+  use EctoCooler
 
   using_repo(Repo) do
     resource(Schema, :read)
@@ -176,7 +176,7 @@ This generates all the functions necessary for reading data:
 defmodule MyApp.MyContext do
   alias MyApp.Repo
   alias MyApp.Schema
-  use EctoResource
+  use EctoCooler
 
   using_repo(Repo) do
     resource(Schema, :read_write)
@@ -203,7 +203,7 @@ The following examples will all assume a repo named `Repo` and a schema named `P
 
 #### all_people
 
-Fetches a list of all %Person{} entries from the data store. _Note: `EctoResource` will pluralize this function name using `Inflex`_
+Fetches a list of all %Person{} entries from the data store. _Note: `EctoCooler` will pluralize this function name using `Inflex`_
 
 ```elixir
 iex> all_people()
@@ -379,23 +379,23 @@ iex> update_person!(%Person{id: 1}, %{invalid: "invalid"})
 
 Caveats
 -------
-This is not meant to be used as a wrapper for all the Repo functions within a context. Not all callbacks defined in Ecto.Repo are generated. `EctoResource` should be used to help reduce boilerplate code and tests for general CRUD operations.
+This is not meant to be used as a wrapper for all the Repo functions within a context. Not all callbacks defined in Ecto.Repo are generated. `EctoCooler` should be used to help reduce boilerplate code and tests for general CRUD operations.
 
-It may be the case that `EctoResource` needs to evolve and provide slightly more functionality/flexibility in the future. However, the general focus is reducing boilerplate code.
+It may be the case that `EctoCooler` needs to evolve and provide slightly more functionality/flexibility in the future. However, the general focus is reducing boilerplate code.
 
 Contribution
 ------------
 
 ### Bug reports
 
-If you discover any bugs, feel free to create an issue on [GitHub](https://github.com/daytonn/ecto_resource/issues). Please add as much information as possible to help in fixing the potential bug. You are also encouraged to help even more by forking and sending us a pull request.
+If you discover any bugs, feel free to create an issue on [GitHub](https://github.com/daytonn/ecto_cooler/issues). Please add as much information as possible to help in fixing the potential bug. You are also encouraged to help even more by forking and sending us a pull request.
 
-[Issues on GitHub](https://github.com/daytonn/ecto_resource/issues)
+[Issues on GitHub](https://github.com/daytonn/ecto_cooler/issues)
 
 ### Pull requests
 
-* Fork it (https://github.com/daytonn/ecto_resource/fork)
-* Add upstream remote (`git remote add upstream git@github.com:daytonn/ecto_resource.git`)
+* Fork it (https://github.com/daytonn/ecto_cooler/fork)
+* Add upstream remote (`git remote add upstream git@github.com:daytonn/ecto_cooler.git`)
 * Make sure you're up-to-date with upstream main (`git pull upstream main`)
 * Create your feature branch (`git checkout -b feature/fooBar`)
 * Commit your changes (`git commit -am 'Add some fooBar'`)
@@ -410,4 +410,4 @@ If you discover any bugs, feel free to create an issue on [GitHub](https://githu
 
 License
 -------
-[Apache 2.0](https://raw.githubusercontent.com/daytonn/ecto_resource/main/LICENSE.txt)
+[Apache 2.0](https://raw.githubusercontent.com/daytonn/ecto_cooler/main/LICENSE.txt)

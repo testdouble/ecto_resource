@@ -1,21 +1,21 @@
-defmodule EctoResource.WithoutSuffixTestContext.People do
+defmodule EctoCooler.WithoutSuffixTestContext.People do
   @moduledoc false
 
-  alias EctoResource.TestRepo
-  alias EctoResource.TestSchema.Person
+  alias EctoCooler.TestRepo
+  alias EctoCooler.TestSchema.Person
 
-  use EctoResource
+  use EctoCooler
 
   using_repo TestRepo do
     resource(Person, suffix: false)
   end
 end
 
-defmodule EctoResource.WithoutSuffixTest do
-  use EctoResource.RepoCase
+defmodule EctoCooler.WithoutSuffixTest do
+  use EctoCooler.RepoCase
 
-  alias EctoResource.TestSchema.Person
-  alias EctoResource.WithoutSuffixTestContext.People
+  alias EctoCooler.TestSchema.Person
+  alias EctoCooler.WithoutSuffixTestContext.People
 
   @person_attributes %{
     first_name: "Test",

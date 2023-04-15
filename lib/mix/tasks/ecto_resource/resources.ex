@@ -1,10 +1,10 @@
-defmodule Mix.Tasks.EctoResource.Resources do
+defmodule Mix.Tasks.EctoCooler.Resources do
   @moduledoc """
-  Task to list the resources defined by `EctoResource` within a context module.
+  Task to list the resources defined by `EctoCooler` within a context module.
 
   ## Examples
 
-      $ mix ecto_resource.resources MyApp.MyContext
+      $ mix ecto_cooler.resources MyApp.MyContext
 
       Within the context Account, the following resource functions have been generated:
 
@@ -34,9 +34,9 @@ defmodule Mix.Tasks.EctoResource.Resources do
   def run([]) do
     Logger.error("""
 
-    This task must be called with a context that uses `EctoResource`
+    This task must be called with a context that uses `EctoCooler`
 
-    $ mix ecto_resource.resources MyApp.MyContext
+    $ mix ecto_cooler.resources MyApp.MyContext
     """)
   end
 

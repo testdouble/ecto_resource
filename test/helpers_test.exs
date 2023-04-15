@@ -1,7 +1,7 @@
-defmodule EctoResource.HelpersTest do
+defmodule EctoCooler.HelpersTest do
   use ExUnit.Case
 
-  alias EctoResource.Helpers
+  alias EctoCooler.Helpers
 
   describe "schema_name/1" do
     test "returns the string schema name" do

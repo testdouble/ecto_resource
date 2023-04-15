@@ -1,7 +1,7 @@
-defmodule EctoResource.OptionParser do
+defmodule EctoCooler.OptionParser do
   @moduledoc false
 
-  alias EctoResource.Helpers
+  alias EctoCooler.Helpers
 
   @functions [
     {"all", 1},

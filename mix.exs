@@ -1,10 +1,10 @@
-defmodule EctoResource.MixProject do
+defmodule EctoCooler.MixProject do
   use Mix.Project
 
   def project do
     [
       aliases: aliases(),
-      app: :ecto_resource,
+      app: :ecto_cooler,
       deps: deps(),
       description: description(),
       dialyzer: [plt_add_apps: [:mix]],
@@ -13,11 +13,11 @@ defmodule EctoResource.MixProject do
         extras: ["README.md"],
         api_reference: false
       ],
-      elixir: "~> 1.8",
+      elixir: ">= 1.14.4",
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
       start_permanent: Mix.env() == :prod,
-      version: "1.3.3"
+      version: "1.0.0"
     ]
   end
 
@@ -27,8 +27,6 @@ defmodule EctoResource.MixProject do
 
   defp aliases do
     [
-      credo: "credo --strict --config-file .credo.ex",
-      check: ["credo", "dialyzer", "cmd MIX_ENV=test mix test"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
@@ -44,7 +42,7 @@ defmodule EctoResource.MixProject do
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Dayton Nolan"],
       licenses: ["Apache 2.0"],
-      links: %{"GitHub" => "https://github.com/testdouble/ecto_resource"}
+      links: %{"GitHub" => "https://github.com/testdouble/ecto_cooler"}
     ]
   end
 
@@ -56,13 +54,10 @@ defmodule EctoResource.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:ecto_sql, "~> 3.6"},
-      {:ex_doc, "~> 0.24", only: :dev, runtime: false},
-      {:inflex, "~> 2.1"},
-      {:mox, "~> 1.0", only: :test},
-      {:postgrex, ">= 0.15.9", only: [:test]}
+      {:ecto_sql, ">= 3.10.1"},
+      {:ex_doc, ">= 0.29.4", only: :dev, runtime: false},
+      {:inflex, ">= 2.1.0"},
+      {:postgrex, ">= 0.17.1", only: [:test]}
     ]
   end
 end

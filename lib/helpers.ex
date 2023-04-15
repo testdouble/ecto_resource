@@ -1,4 +1,4 @@
-defmodule EctoResource.Helpers do
+defmodule EctoCooler.Helpers do
   @moduledoc false
 
   @spec underscore_module_name(module) :: String.t()

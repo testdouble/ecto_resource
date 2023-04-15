@@ -1,4 +1,4 @@
-defmodule EctoResource.TestSchema.Person do
+defmodule EctoCooler.TestSchema.Person do
   use Ecto.Schema
   import Ecto.Changeset
 

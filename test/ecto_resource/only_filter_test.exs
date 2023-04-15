@@ -1,21 +1,21 @@
-defmodule EctoResource.OnlyFilterTestContext.People do
+defmodule EctoCooler.OnlyFilterTestContext.People do
   @moduledoc false
 
-  alias EctoResource.TestRepo
-  alias EctoResource.TestSchema.Person
+  alias EctoCooler.TestRepo
+  alias EctoCooler.TestSchema.Person
 
-  use EctoResource
+  use EctoCooler
 
   using_repo TestRepo do
     resource(Person, only: [:all, :change])
   end
 end
 
-defmodule EctoResource.OnlyFilterTest do
-  use EctoResource.RepoCase
+defmodule EctoCooler.OnlyFilterTest do
+  use EctoCooler.RepoCase
 
-  alias EctoResource.TestSchema.Person
-  alias EctoResource.OnlyFilterTestContext.People
+  alias EctoCooler.TestSchema.Person
+  alias EctoCooler.OnlyFilterTestContext.People
 
   @person_attributes %{
     first_name: "Test",

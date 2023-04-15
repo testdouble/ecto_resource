@@ -1,4 +1,4 @@
-defmodule EctoResource.ResourceFunctions do
+defmodule EctoCooler.ResourceFunctions do
   @moduledoc false
   import Ecto.Query
 

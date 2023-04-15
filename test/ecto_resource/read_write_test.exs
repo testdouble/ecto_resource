@@ -1,21 +1,21 @@
-defmodule EctoResource.ReadWriteContext.People do
+defmodule EctoCooler.ReadWriteContext.People do
   @moduledoc false
 
-  alias EctoResource.TestRepo
-  alias EctoResource.TestSchema.Person
+  alias EctoCooler.TestRepo
+  alias EctoCooler.TestSchema.Person
 
-  use EctoResource
+  use EctoCooler
 
   using_repo TestRepo do
     resource(Person, :read_write)
   end
 end
 
-defmodule EctoResource.ReadWrite do
-  use EctoResource.RepoCase
+defmodule EctoCooler.ReadWrite do
+  use EctoCooler.RepoCase
 
-  alias EctoResource.TestSchema.Person
-  alias EctoResource.ReadWriteContext.People
+  alias EctoCooler.TestSchema.Person
+  alias EctoCooler.ReadWriteContext.People
 
   @person_attributes %{
     first_name: "Test",
