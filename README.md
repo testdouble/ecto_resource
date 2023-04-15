@@ -1,6 +1,6 @@
 EctoCooler
 ============
-
+![Ecto Cooler Logo](https://repository-images.githubusercontent.com/628352289/291d151f-76d9-4e9b-8321-665038706764)
 * [About](#about)
 * [Features](#features)
 * [Installation](#installation)
