@@ -50,7 +50,7 @@ defmodule EctoResource.ExceptFilterTest do
       }
 
       assert_raise UndefinedFunctionError, fn ->
-        People.change_person(person, @person_attributes)
+        apply(People, :change_person, [person, @person_attributes])
       end
     end
   end
@@ -58,7 +58,7 @@ defmodule EctoResource.ExceptFilterTest do
   describe "changeset" do
     test "it doesn't create a changeset function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.person_changeset()
+        apply(People, :person_changeset, [])
       end
     end
   end

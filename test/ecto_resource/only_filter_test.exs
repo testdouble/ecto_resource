@@ -58,7 +58,7 @@ defmodule EctoResource.OnlyFilterTest do
   describe "changeset" do
     test "it doesn't create a changeset function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.person_changeset()
+        apply(People, :person_changeset, [])
       end
     end
   end
@@ -66,7 +66,7 @@ defmodule EctoResource.OnlyFilterTest do
   describe "create" do
     test "it doesn't create a create function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.create_person(@person_attributes)
+        apply(People, :create_person, [@person_attributes])
       end
     end
   end
@@ -74,7 +74,7 @@ defmodule EctoResource.OnlyFilterTest do
   describe "create!" do
     test "it doesn't create a create! function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.create_person!(@person_attributes)
+        apply(People, :create_person!, [@person_attributes])
       end
     end
   end
@@ -87,7 +87,7 @@ defmodule EctoResource.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person(person)
+        apply(People, :delete_person, [person])
       end
     end
   end
@@ -100,7 +100,7 @@ defmodule EctoResource.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person!(person)
+        apply(People, :delete_person!, [person])
       end
     end
   end
@@ -113,7 +113,7 @@ defmodule EctoResource.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.get_person(person.id)
+        apply(People, :get_person, [person.id])
       end
     end
   end
@@ -126,7 +126,7 @@ defmodule EctoResource.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.get_person!(person.id)
+        apply(People, :get_person!, [person.id])
       end
     end
   end
@@ -134,7 +134,7 @@ defmodule EctoResource.OnlyFilterTest do
   describe "get_by" do
     test "doesn't create a get_by function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.get_person_by(age: @person_attributes.age)
+        apply(People, :get_person_by, age: @person_attributes.age)
       end
     end
   end
@@ -142,7 +142,7 @@ defmodule EctoResource.OnlyFilterTest do
   describe "get_by!" do
     test "doesn't create a get_by! function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.get_person_by!(age: @person_attributes.age)
+        apply(People, :get_person_by!, age: @person_attributes.age)
       end
     end
   end
@@ -155,7 +155,7 @@ defmodule EctoResource.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.update_person(person, @updated_person_attributes)
+        apply(People, :update_person, [person, @updated_person_attributes])
       end
     end
   end
@@ -168,7 +168,7 @@ defmodule EctoResource.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.update_person!(person, @updated_person_attributes)
+        apply(People, :update_person!, [person, @updated_person_attributes])
       end
     end
   end

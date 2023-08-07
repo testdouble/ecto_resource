@@ -58,7 +58,7 @@ defmodule EctoResource.MixProject do
     [
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:ecto_sql, "~> 3.6"},
+      {:ecto_sql, "~> 3.10"},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:inflex, "~> 2.1"},
       {:mox, "~> 1.0", only: :test},
