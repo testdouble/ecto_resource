@@ -1,0 +1,25 @@
+name: Nightly Integration Tests
+
+on:
+  schedule:
+    - cron: '0 7 * * *'
+
+jobs:
+  integration_test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Elixir Project
+        uses: ./.github/actions/elixir-setup
+        with:
+          elixir-version: 1.15.2
+          otp-version: 26.0.2
+
+      - name: Run Tests
+        run: mix test 

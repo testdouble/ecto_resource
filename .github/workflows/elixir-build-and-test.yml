@@ -1,0 +1,32 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Elixir Project
+        uses: ./.github/actions/elixir-setup
+        with:
+          elixir-version: 1.15.2
+          otp-version: 26.0.2
+          build-flags: --all-warnings --warnings-as-errors
+          build-app: true
+
+      - name: Run Tests
+        run: mix test --warnings-as-errors
+        if: always()
