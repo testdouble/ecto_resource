@@ -7,7 +7,13 @@ defmodule EctoResource.MixProject do
       app: :ecto_resource,
       deps: deps(),
       description: description(),
-      dialyzer: [plt_add_apps: [:mix]],
+      dialyzer: [
+        ignore_warnings: ".dialyzer_ignore.exs",
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+        flags: [:error_handling, :unknown],
+        # Error out when an ignore rule is no longer useful so we can remove it
+        list_unused_filters: true
+      ],
       docs: [
         main: "readme",
         extras: ["README.md"],
