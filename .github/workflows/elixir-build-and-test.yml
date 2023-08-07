@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-      - '*'
+      - "*"
 
 jobs:
   build:
@@ -15,6 +15,20 @@ jobs:
     env:
       MIX_ENV: test
 
+    # Remove if you don't need a database
+    services:
+      db:
+        image: "postgres:15.3-alpine"
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: phoenix_solid_js_template_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -26,6 +40,12 @@ jobs:
           otp-version: 26.0.2
           build-flags: --all-warnings --warnings-as-errors
           build-app: true
+
+      - name: Run Migrations
+        run: mix ecto.migrate
+        # Run tests & migrations even if compilation failed (probably due to warnings)
+        # so that we give devs as much feedback as possible & save some time.
+        if: always()
 
       - name: Run Tests
         run: mix test --warnings-as-errors

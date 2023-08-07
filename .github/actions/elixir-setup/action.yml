@@ -29,7 +29,7 @@ inputs:
   build-flags:
     required: false
     type: string
-    default: '--all-warnings'
+    default: "--all-warnings"
     description: Flags to pass to mix compile
   install-rebar:
     required: false
@@ -44,7 +44,7 @@ inputs:
   cache-key:
     required: false
     type: string
-    default: 'v1'
+    default: "v1"
     description: If you need to reset the cache for some reason, you can change this key.
 outputs:
   otp-version:
@@ -122,14 +122,6 @@ runs:
       run: mix loadpaths
       shell: sh
       if: inputs.build-deps == 'true'
-
-    - name: Install Frontend Dependencies
-      run: npm install --prefix assets
-      shell: sh
-
-    - name: Build Frontend
-      run: npm run build --prefix assets
-      shell: sh
 
     - name: Compile Application
       run: mix compile ${{ inputs.build-flags }}
