@@ -63,7 +63,7 @@ defmodule EctoResource.MixProject do
   defp deps do
     [
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.3", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.10"},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:inflex, "~> 2.1"},
