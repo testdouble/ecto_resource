@@ -27,7 +27,7 @@ defmodule EctoResource.MixProject do
 
   defp aliases do
     [
-      credo: "credo --strict --config-file .credo.ex",
+      credo: "credo --strict",
       check: ["credo", "dialyzer", "cmd MIX_ENV=test mix test"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
@@ -56,7 +56,7 @@ defmodule EctoResource.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.10"},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},

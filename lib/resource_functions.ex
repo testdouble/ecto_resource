@@ -5,8 +5,7 @@ defmodule EctoResource.ResourceFunctions do
   @spec change(module, Ecto.Schema.t(), map() | Keyword.t()) :: Ecto.Changeset.t()
 
   def change(schema, changeable, changes) when is_map(changes) do
-    changeable
-    |> schema.changeset(changes)
+    schema.changeset(changeable, changes)
   end
 
   def change(schema, changeable, changes) when is_list(changes) do
@@ -16,7 +15,9 @@ defmodule EctoResource.ResourceFunctions do
   @spec changeset(Ecto.Schema.t()) :: Ecto.Changeset.t()
 
   def changeset(schema) do
-    schema.changeset(struct(schema), %{})
+    schema
+    |> struct()
+    |> schema.changeset(%{})
   end
 
   @spec create(Ecto.Repo.t(), module, map() | Keyword.t()) ::
@@ -50,15 +51,13 @@ defmodule EctoResource.ResourceFunctions do
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
   def delete(repo, deletable) do
-    deletable
-    |> repo.delete([])
+    repo.delete(deletable, [])
   end
 
   @spec delete!(Ecto.Repo.t(), Ecto.Schema.t()) :: Ecto.Schema.t()
 
   def delete!(repo, deletable) do
-    deletable
-    |> repo.delete!([])
+    repo.delete!(deletable, [])
   end
 
   @spec get(Ecto.Repo.t(), module, term(), term()) :: Ecto.Schema.t() | nil

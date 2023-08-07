@@ -75,7 +75,9 @@ defmodule EctoResource do
         resource(Schema, :delete)
       end
   """
+  # credo:disable-for-next-line
   defmacro resource(schema, options \\ []) do
+    # credo:disable-for-next-line
     quote bind_quoted: [schema: schema, options: options] do
       suffix = OptionParser.create_suffix(schema, options)
       schema_name = Helpers.schema_name(schema)
@@ -84,8 +86,7 @@ defmodule EctoResource do
 
       Module.put_attribute(__MODULE__, :resources, {@repo, schema, descriptions})
 
-      resources
-      |> Enum.each(fn {action, %{name: name}} ->
+      Enum.each(resources, fn {action, %{name: name}} ->
         case action do
           :all ->
             @doc """

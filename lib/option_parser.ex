@@ -22,8 +22,7 @@ defmodule EctoResource.OptionParser do
   @spec parse(String.t(), list() | atom()) :: map()
 
   def parse(suffix, []) do
-    @functions
-    |> Enum.reduce(%{}, fn {function, arity}, acc ->
+    Enum.reduce(@functions, %{}, fn {function, arity}, acc ->
       Map.put(acc, String.to_atom(function), %{
         name: function_name(function, suffix),
         description: function_description(function, arity, suffix)
@@ -89,11 +88,13 @@ defmodule EctoResource.OptionParser do
   end
 
   defp function_name(function, suffix) do
-    case function =~ ~r/!/ do
-      true -> String.replace_suffix(function, "!", "") <> "_" <> suffix <> "!"
-      false -> function <> "_" <> suffix
-    end
-    |> String.to_atom()
+    str =
+      case function =~ ~r/!/ do
+        true -> String.replace_suffix(function, "!", "") <> "_" <> suffix <> "!"
+        false -> function <> "_" <> suffix
+      end
+
+    String.to_atom(str)
   end
 
   defp function_description(function, arity, "") do
