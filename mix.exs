@@ -12,7 +12,8 @@ defmodule EctoResource.MixProject do
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
         flags: [:error_handling, :unknown],
         # Error out when an ignore rule is no longer useful so we can remove it
-        list_unused_filters: true
+        list_unused_filters: true,
+        plt_add_apps: [:mix]
       ],
       docs: [
         main: "readme",

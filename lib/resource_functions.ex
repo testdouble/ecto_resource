@@ -12,8 +12,7 @@ defmodule EctoResource.ResourceFunctions do
     change(schema, changeable, Enum.into(changes, %{}))
   end
 
-  @spec changeset(Ecto.Schema.t()) :: Ecto.Changeset.t()
-
+  @spec changeset(module()) :: Ecto.Changeset.t()
   def changeset(schema) do
     schema
     |> struct()
@@ -80,7 +79,7 @@ defmodule EctoResource.ResourceFunctions do
     |> repo.get!(id, [])
   end
 
-  @spec get_by(EctoRepo.t(), Ecto.Queryable.t(), Keyword.t() | map(), Keyword.t()) ::
+  @spec get_by(Ecto.Repo.t(), Ecto.Queryable.t(), Keyword.t() | map(), Keyword.t()) ::
           Ecto.Schema.t() | nil
 
   def get_by(repo, schema, attributes, options \\ []) do
@@ -91,7 +90,7 @@ defmodule EctoResource.ResourceFunctions do
     |> repo.get_by(attributes, options)
   end
 
-  @spec get_by!(EctoRepo.t(), Ecto.Queryable.t(), Keyword.t() | map(), Keyword.t()) ::
+  @spec get_by!(Ecto.Repo.t(), Ecto.Queryable.t(), Keyword.t() | map(), Keyword.t()) ::
           Ecto.Schema.t()
 
   def get_by!(repo, schema, attributes, options \\ []) do
