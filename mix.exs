@@ -24,7 +24,7 @@ defmodule EctoResource.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
       start_permanent: Mix.env() == :prod,
-      version: "1.3.3"
+      version: "1.4.0"
     ]
   end
 
