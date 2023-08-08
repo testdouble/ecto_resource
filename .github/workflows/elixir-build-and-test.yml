@@ -40,7 +40,7 @@ jobs:
           # Elixir 1.15
           - elixir-version: 1.15.0
             otp-version: 25.3
-          - elixir-version: 1.15.-
+          - elixir-version: 1.15.0
             otp-version: 26.0
 
     name: Build and test
