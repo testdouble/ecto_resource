@@ -20,7 +20,7 @@ EctoResource
 
 Eliminate boilerplate involved in defining basic CRUD functions in a Phoenix context or Elixir module.
 
-About
+Rationale
 -----
 When using [Context modules](https://hexdocs.pm/phoenix/contexts.html) in a [Phoenix](https://phoenixframework.org/) application, there's a general need to define the standard CRUD functions for a given `Ecto.Schema`. Phoenix context generators will even do this automatically. Soon you will notice that there's quite a lot of code involved in CRUD access within your contexts.
 
