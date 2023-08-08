@@ -10,6 +10,39 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        include:
+          # Elixir 1.12
+          - elixir-version: 1.12.0
+            otp-version: 22.3
+          - elixir-version: 1.12.0
+            otp-version: 23.3
+          - elixir-version: 1.12.0
+            otp-version: 24.3
+
+          # Elixir 1.13
+          - elixir-version: 1.13.0
+            otp-version: 22.3
+          - elixir-version: 1.13.0
+            otp-version: 23.3
+          - elixir-version: 1.13.0
+            otp-version: 24.3
+
+          # Elixir 1.14
+          - elixir-version: 1.14.0
+            otp-version: 23.3
+          - elixir-version: 1.14.0
+            otp-version: 24.3
+          - elixir-version: 1.14.0
+            otp-version: 25.3
+
+          # Elixir 1.15
+          - elixir-version: 1.15.0
+            otp-version: 25.3
+          - elixir-version: 1.15.-
+            otp-version: 26.0
+
     name: Build and test
     runs-on: ubuntu-latest
     env:
@@ -36,8 +69,8 @@ jobs:
       - name: Setup Elixir Project
         uses: ./.github/actions/elixir-setup
         with:
-          elixir-version: 1.15.2
-          otp-version: 26.0.2
+          elixir-version: ${{ matrix.elixir-version }}
+          otp-version: ${{ matrix.otp-version }}
           build-flags: --all-warnings --warnings-as-errors
           build-app: true
 
