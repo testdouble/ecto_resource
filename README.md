@@ -226,6 +226,9 @@ iex> all_people(preloads: [:address], order_by: [desc: :id]))
     address: %Address{}
   }
 ]
+
+iex> all_people(where: [id: 2])
+[%Person{id: 2, address: %Address{}}]
 ```
 
 #### change_person

@@ -39,6 +39,15 @@ defmodule EctoResource.DefaultsTest do
       assert length(result) == 1
       assert first_person.first_name == person.first_name
     end
+
+    test "it filters based on 'where' option " do
+      person = struct(Person, @person_attributes)
+      Repo.insert(person)
+      result = People.all_people(where: [age: 40])
+      assert [] == result
+      result = People.all_people(where: [age: 42])
+      assert length(result) == 1
+    end
   end
 
   describe "change" do
