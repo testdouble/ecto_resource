@@ -5,18 +5,18 @@ defmodule EctoResource.ResourceFunctions do
   @spec change(module, Ecto.Schema.t(), map() | Keyword.t()) :: Ecto.Changeset.t()
 
   def change(schema, changeable, changes) when is_map(changes) do
-    changeable
-    |> schema.changeset(changes)
+    schema.changeset(changeable, changes)
   end
 
   def change(schema, changeable, changes) when is_list(changes) do
     change(schema, changeable, Enum.into(changes, %{}))
   end
 
-  @spec changeset(Ecto.Schema.t()) :: Ecto.Changeset.t()
-
+  @spec changeset(module()) :: Ecto.Changeset.t()
   def changeset(schema) do
-    schema.changeset(struct(schema), %{})
+    schema
+    |> struct()
+    |> schema.changeset(%{})
   end
 
   @spec create(Ecto.Repo.t(), module, map() | Keyword.t()) ::
@@ -50,15 +50,13 @@ defmodule EctoResource.ResourceFunctions do
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
   def delete(repo, deletable) do
-    deletable
-    |> repo.delete([])
+    repo.delete(deletable, [])
   end
 
   @spec delete!(Ecto.Repo.t(), Ecto.Schema.t()) :: Ecto.Schema.t()
 
   def delete!(repo, deletable) do
-    deletable
-    |> repo.delete!([])
+    repo.delete!(deletable, [])
   end
 
   @spec get(Ecto.Repo.t(), module, term(), term()) :: Ecto.Schema.t() | nil
@@ -81,7 +79,7 @@ defmodule EctoResource.ResourceFunctions do
     |> repo.get!(id, [])
   end
 
-  @spec get_by(EctoRepo.t(), Ecto.Queryable.t(), Keyword.t() | map(), Keyword.t()) ::
+  @spec get_by(Ecto.Repo.t(), Ecto.Queryable.t(), Keyword.t() | map(), Keyword.t()) ::
           Ecto.Schema.t() | nil
 
   def get_by(repo, schema, attributes, options \\ []) do
@@ -92,7 +90,7 @@ defmodule EctoResource.ResourceFunctions do
     |> repo.get_by(attributes, options)
   end
 
-  @spec get_by!(EctoRepo.t(), Ecto.Queryable.t(), Keyword.t() | map(), Keyword.t()) ::
+  @spec get_by!(Ecto.Repo.t(), Ecto.Queryable.t(), Keyword.t() | map(), Keyword.t()) ::
           Ecto.Schema.t()
 
   def get_by!(repo, schema, attributes, options \\ []) do

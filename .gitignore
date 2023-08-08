@@ -24,3 +24,5 @@ ecto_resource-*.tar
 
 .elixir_ls
 tmp/
+
+priv/plts

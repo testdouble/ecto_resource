@@ -63,9 +63,7 @@ defmodule Mix.Tasks.EctoResource.Resources do
 
   @spec format_functions(atom(), any()) :: binary()
   defp format_functions(context, functions) do
-    functions
-    |> Enum.map(fn f -> "- #{context}.#{f}" end)
-    |> Enum.join("\n")
+    Enum.map_join(functions, "\n", fn f -> "- #{context}.#{f}" end)
   end
 
   @spec resources(module()) :: any()

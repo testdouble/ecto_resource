@@ -96,7 +96,7 @@ defmodule EctoResource.ReadWrite do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person(person)
+        apply(People, :delete_person, [person])
       end
     end
   end
@@ -109,7 +109,7 @@ defmodule EctoResource.ReadWrite do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person!(person)
+        apply(People, :delete_person!, [person])
       end
     end
   end

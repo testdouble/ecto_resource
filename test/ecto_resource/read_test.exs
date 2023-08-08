@@ -50,7 +50,7 @@ defmodule EctoResource.ReadTest do
       }
 
       assert_raise UndefinedFunctionError, fn ->
-        People.change_person(person, @person_attributes)
+        apply(People, :change_person, [person, @person_attributes])
       end
     end
   end
@@ -58,7 +58,7 @@ defmodule EctoResource.ReadTest do
   describe "changeset" do
     test "it doesn't create a changeset function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.person_changeset()
+        apply(People, :person_changeset, [])
       end
     end
   end
@@ -66,7 +66,7 @@ defmodule EctoResource.ReadTest do
   describe "create" do
     test "it doesn't create a create function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.create_person(@person_attributes)
+        apply(People, :create_person, [@person_attributes])
       end
     end
   end
@@ -74,7 +74,7 @@ defmodule EctoResource.ReadTest do
   describe "create!" do
     test "it doesn't create a create! function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.create_person!(@person_attributes)
+        apply(People, :create_person!, [@person_attributes])
       end
     end
   end
@@ -87,7 +87,7 @@ defmodule EctoResource.ReadTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person(person)
+        apply(People, :delete_person, [person])
       end
     end
   end
@@ -100,7 +100,7 @@ defmodule EctoResource.ReadTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person!(person)
+        apply(People, :delete_person!, [person])
       end
     end
   end
@@ -171,7 +171,7 @@ defmodule EctoResource.ReadTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.update_person(person, @updated_person_attributes)
+        apply(People, :update_person, [person, @updated_person_attributes])
       end
     end
   end
@@ -184,7 +184,7 @@ defmodule EctoResource.ReadTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.update_person!(person, @updated_person_attributes)
+        apply(People, :update_person!, [person, @updated_person_attributes])
       end
     end
   end
