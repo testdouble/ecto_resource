@@ -1,8 +1,10 @@
 defmodule EctoResource do
   @moduledoc """
-  This module provides a DSL to easily generate the basic functions for a schema.
+  EctoResource generates CRUD functions for a given schema.
   This allows the context to focus on interesting, atypical implementations rather
-  than the redundent, drifting CRUD functions.
+  than the redundent, uninteresting CRUD functions.
+
+
   """
 
   alias __MODULE__

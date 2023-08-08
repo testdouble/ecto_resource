@@ -18,7 +18,7 @@ defmodule EctoResource.MixProject do
       docs: [
         main: "readme",
         extras: ["README.md"],
-        api_reference: false
+        api_reference: true
       ],
       elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
