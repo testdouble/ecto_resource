@@ -62,6 +62,7 @@ runs:
       with:
         elixir-version: ${{ inputs.elixir-version }}
         otp-version: ${{ inputs.otp-version }}
+        version-type: "strict"
 
     - name: Get deps cache
       uses: actions/cache@v3
