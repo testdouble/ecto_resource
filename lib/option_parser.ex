@@ -63,8 +63,10 @@ defmodule EctoCooler.OptionParser do
   end
 
   @spec create_suffix(module, list()) :: String.t()
+  def create_suffix(schema, options) when not is_list(options), do: ""
+
   def create_suffix(schema, options) when is_list(options) do
-    if Keyword.get(options, :suffix) == false do
+    if Keyword.get(options, :suffix, false) == false do
       ""
     else
       Helpers.underscore_module_name(schema)

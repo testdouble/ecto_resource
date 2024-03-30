@@ -34,7 +34,7 @@ defmodule EctoCooler.ExceptFilterTest do
       person = struct(Person, @person_attributes)
 
       Repo.insert(person)
-      [first_person] = results = People.all_people()
+      [first_person] = results = People.all()
 
       assert length(results) == 1
       assert person.first_name == first_person.first_name
@@ -50,7 +50,7 @@ defmodule EctoCooler.ExceptFilterTest do
       }
 
       assert_raise UndefinedFunctionError, fn ->
-        People.change_person(person, @person_attributes)
+        People.change(person, @person_attributes)
       end
     end
   end
@@ -58,33 +58,33 @@ defmodule EctoCooler.ExceptFilterTest do
   describe "changeset" do
     test "it doesn't create a changeset function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.person_changeset()
+        People.changeset()
       end
     end
   end
 
   describe "create" do
     test "with valid attributbes, it creates a new record" do
-      {:ok, person} = People.create_person(@person_attributes)
+      {:ok, person} = People.create(@person_attributes)
 
       assert Repo.all(Person) == [person]
     end
 
     test "with invalid attributes, it returns an error tuple with a changeset" do
-      assert {:error, %Ecto.Changeset{}} = People.create_person(%{})
+      assert {:error, %Ecto.Changeset{}} = People.create(%{})
     end
   end
 
   describe "create!" do
     test "whith valid attributes, it creates a new record" do
-      person = People.create_person!(@person_attributes)
+      person = People.create!(@person_attributes)
 
       assert Repo.all(Person) == [person]
     end
 
     test "with invalid attributes, it raises an error" do
       assert_raise Ecto.InvalidChangesetError, fn ->
-        People.create_person!(%{})
+        People.create!(%{})
       end
     end
   end
@@ -98,7 +98,7 @@ defmodule EctoCooler.ExceptFilterTest do
 
       assert Repo.all(Person) == [person]
 
-      People.delete_person(person)
+      People.delete(person)
 
       assert Repo.all(Person) == []
     end
@@ -112,7 +112,7 @@ defmodule EctoCooler.ExceptFilterTest do
       Repo.delete(person)
 
       assert_raise Ecto.StaleEntryError, fn ->
-        People.delete_person(person)
+        People.delete(person)
       end
     end
   end
@@ -126,7 +126,7 @@ defmodule EctoCooler.ExceptFilterTest do
 
       assert Repo.all(Person) == [person]
 
-      People.delete_person!(person)
+      People.delete!(person)
 
       assert Repo.all(Person) == []
     end
@@ -140,7 +140,7 @@ defmodule EctoCooler.ExceptFilterTest do
       Repo.delete(person)
 
       assert_raise Ecto.StaleEntryError, fn ->
-        People.delete_person!(person)
+        People.delete!(person)
       end
     end
   end
@@ -152,11 +152,11 @@ defmodule EctoCooler.ExceptFilterTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert person == People.get_person(person.id)
+      assert person == People.get(person.id)
     end
 
     test "with a non-existent record, it returns nil" do
-      assert nil == People.get_person(999)
+      assert nil == People.get(999)
     end
   end
 
@@ -167,12 +167,12 @@ defmodule EctoCooler.ExceptFilterTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert person == People.get_person!(person.id)
+      assert person == People.get!(person.id)
     end
 
     test "with a non-existent record, it raises an error" do
       assert_raise Ecto.NoResultsError, fn ->
-        People.get_person!(999)
+        People.get!(999)
       end
     end
   end
@@ -184,11 +184,11 @@ defmodule EctoCooler.ExceptFilterTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert People.get_person_by(age: @person_attributes.age) == person
+      assert People.get_by(age: @person_attributes.age) == person
     end
 
     test "with a non-existent record, it returns nil" do
-      assert People.get_person_by(age: @person_attributes.age) == nil
+      assert People.get_by(age: @person_attributes.age) == nil
     end
   end
 
@@ -199,7 +199,7 @@ defmodule EctoCooler.ExceptFilterTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert People.get_person_by!(age: @person_attributes.age) == person
+      assert People.get_by!(age: @person_attributes.age) == person
     end
   end
 
@@ -210,7 +210,7 @@ defmodule EctoCooler.ExceptFilterTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      {:ok, updated_person} = People.update_person(person, @updated_person_attributes)
+      {:ok, updated_person} = People.update(person, @updated_person_attributes)
 
       assert person.id == updated_person.id
       assert person.first_name != updated_person.first_name
@@ -225,7 +225,7 @@ defmodule EctoCooler.ExceptFilterTest do
         |> Repo.insert()
 
       assert {:error, changeset} =
-               People.update_person(person, %{first_name: nil, last_name: nil, age: nil})
+               People.update(person, %{first_name: nil, last_name: nil, age: nil})
 
       refute changeset.valid?
     end
@@ -238,7 +238,7 @@ defmodule EctoCooler.ExceptFilterTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      updated_person = People.update_person!(person, @updated_person_attributes)
+      updated_person = People.update!(person, @updated_person_attributes)
 
       assert person.id == updated_person.id
       assert person.first_name != updated_person.first_name
@@ -253,7 +253,7 @@ defmodule EctoCooler.ExceptFilterTest do
         |> Repo.insert()
 
       assert_raise Ecto.InvalidChangesetError, fn ->
-        People.update_person!(person, %{first_name: nil, last_name: nil, age: nil})
+        People.update!(person, %{first_name: nil, last_name: nil, age: nil})
       end
     end
   end
