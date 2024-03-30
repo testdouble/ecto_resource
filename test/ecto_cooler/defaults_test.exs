@@ -42,6 +42,24 @@ defmodule EctoCooler.DefaultsTest do
       assert length(result) == 1
       assert first_person.first_name == person.first_name
     end
+
+    test "it filters by where" do
+      {:ok, person} =
+        Person
+        |> struct(@person_attributes)
+        |> Repo.insert()
+
+      {:ok, _} =
+        Person
+        |> struct(%{first_name: "Other Test", last_name: "Other Person", age: 30})
+        |> Repo.insert()
+
+      result = People.all(where: [age: 42])
+      [first_person] = result
+
+      assert length(result) == 1
+      assert first_person.first_name == person.first_name
+    end
   end
 
   describe "change" do
