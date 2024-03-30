@@ -1,0 +1,22 @@
+defmodule <%= assigns.app_name %>.<%= assigns.schema_namespace %>.<%= assigns.schema_name %> do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  <%= if assigns.binary_id do %>
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+
+  <% end %>
+  schema "<%= assigns.table_name %>" do
+    <%= for field <- assigns.fields do %><%= field %>
+    <% end %>
+    timestamps()
+  end
+
+  @doc false
+  def changeset(<%= assigns.instance_name %>, attrs) do
+    <%= assigns.instance_name %>
+    |> cast(attrs, [<%= assigns.attributes %>])
+    |> validate_required([<%= assigns.attributes %>])
+  end
+end

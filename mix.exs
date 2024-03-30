@@ -48,12 +48,13 @@ defmodule EctoCooler.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [extra_applications: [:logger]]
+    [extra_applications: [:logger, :bunt]]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:bunt, "~> 1.0"},
       {:ecto_sql, ">= 3.10.1"},
       {:ex_doc, ">= 0.29.4", only: :dev, runtime: false},
       {:inflex, ">= 2.1.0"},
