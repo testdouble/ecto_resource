@@ -116,6 +116,18 @@ defmodule EctoCooler do
                 relation: %Relation{}
               }
             ]
+
+            #{all.name}(where: [active: true])
+            [
+              %#{schema_name}{
+                id: 1,
+                active: true
+              },
+              %#{schema_name}{
+                id: 42,
+                active: true
+              }
+            ]
         """
         @spec unquote(all.name)(keyword(list())) :: list(Ecto.Schema.t())
         def unquote(all.name)(options \\ []) do
