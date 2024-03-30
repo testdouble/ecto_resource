@@ -42,7 +42,7 @@ defmodule EctoCooler.MixProject do
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Dayton Nolan"],
       licenses: ["Apache 2.0"],
-      links: %{"GitHub" => "https://github.com/testdouble/ecto_cooler"}
+      links: %{"GitHub" => "https://github.com/daytonn/ecto_cooler"}
     ]
   end
 
