@@ -48,7 +48,7 @@ defmodule EctoCooler.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [extra_applications: [:logger, :bunt]]
+    [extra_applications: [:logger, :bunt, :eex]]
   end
 
   # Run "mix help deps" to learn about dependencies.
