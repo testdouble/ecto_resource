@@ -1,6 +1,5 @@
 Changelog
 =========
-
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -9,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Unreleased
 ==========
 ### Added
-- Add `where` option to `all` function
+
 ### Changed
 
 ### Removed
@@ -19,6 +18,12 @@ Unreleased
 ### Security
 
 ---
+[2.0.0]
+- Add `where` option to `all` function
+- Suffix is excluded by default. Suffix is only generated explicitly now with suffix: true.
+- Generators have been added to make generating schema and "context" modules within Phoenix applications easier.
+- Small refactoring making it slightly simpler to read through the `resource` macro
+- Some documentation fixes
 
 [1.3.3]
 -------
