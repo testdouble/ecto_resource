@@ -2,7 +2,7 @@ defmodule <%= assigns.app_name %>.Repo.Migrations.Create<%= assigns.repo_name %>
   use Ecto.Migration
 
   def change do
-    create table(<%= assigns.table_name %><%= assigns.options %>) do
+    create table(:<%= assigns.table_name %><%= assigns.options %>) do
       <%= for field <- assigns.fields do %><%= field %>
       <% end %>
       timestamps()

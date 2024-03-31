@@ -21,7 +21,6 @@ defmodule EctoCooler.Templates.Migration do
 
     repo_name = Inflex.pluralize(schema_name)
     options = options(binary_id: binary_id)
-    table_name = ":#{table_name}"
     migration_dir = Env.get(:migration_dir, "priv/repo/migrations")
 
     assigns = %{
