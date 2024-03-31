@@ -280,8 +280,8 @@ defmodule EctoCooler.OptionParserTest do
     defmodule TestSchema do
     end
 
-    test "with no options, it returns the schema name lowercased, prefixed with an underscore" do
-      assert OptionParser.create_suffix(TestSchema, []) == "test_schema"
+    test "with no options, it returns an empty sstring" do
+      assert OptionParser.create_suffix(TestSchema, []) == ""
     end
 
     test "with suffix false option, it returns an empty string" do
@@ -291,6 +291,10 @@ defmodule EctoCooler.OptionParserTest do
     test "with suffix false option and other options" do
       assert OptionParser.create_suffix(TestSchema, suffix: false, except: [:create!, :create]) ==
                ""
+    end
+
+    test "when suffix is true, it returns a suffix" do
+      assert OptionParser.create_suffix(TestSchema, suffix: true) == "test_schema"
     end
   end
 end

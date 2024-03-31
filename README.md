@@ -78,302 +78,350 @@ Usage
 ### Basic usage - generate all `EctoCooler` functions
 
 ```elixir
-defmodule MyApp.MyContext do
+defmodule MyApp.Repo.Posts do
   alias MyApp.Repo
-  alias MyApp.Schema
+  alias MyApp.Schema.Post
+
   use EctoCooler
 
   using_repo(Repo) do
-    resource(Schema)
+    resource(Post)
   end
 end
 ```
 
 This generates all the functions `EctoCooler` has to offer:
 
-* `MyContext.all_schemas/1`
-* `MyContext.change_schema/1`
-* `MyContext.create_schema/1`
-* `MyContext.create_schema!/1`
-* `MyContext.delete_schema/1`
-* `MyContext.delete_schema!/1`
-* `MyContext.get_schema/2`
-* `MyContext.get_schema!/2`
-* `MyContext.get_schema_by/2`
-* `MyContext.get_schema_by!/2`
-* `MyContext.update_schema/2`
-* `MyContext.update_schema!/2`
+* `MyApp.Repo.Posts.all/1`
+* `MyApp.Repo.Posts.change/1`
+* `MyApp.Repo.Posts.create/1`
+* `MyApp.Repo.Posts.create!/1`
+* `MyApp.Repo.Posts.delete/1`
+* `MyApp.Repo.Posts.delete!/1`
+* `MyApp.Repo.Posts.get/2`
+* `MyApp.Repo.Posts.get!/2`
+* `MyApp.Repo.Posts.get_by/2`
+* `MyApp.Repo.Posts.get_by!/2`
+* `MyApp.Repo.Posts.update/2`
+* `MyApp.Repo.Posts.update!/2`
+
+If you want the functions to be namespaced, you can use the `suffix: true` option.
+
+```elixir
+defmodule MyApp.Repo.Posts do
+  alias MyApp.Repo
+  alias MyApp.Schema.Post
+
+  use EctoCooler
+
+  using_repo(Repo) do
+    resource(Post, suffix: true)
+  end
+end
+```
+
+This generates all the functions `EctoCooler` with a suffix:
+
+* `MyApp.Repo.Posts.all_posts/1`
+* `MyApp.Repo.Posts.change_post/1`
+* `MyApp.Repo.Posts.create_post/1`
+* `MyApp.Repo.Posts.create_post!/1`
+* `MyApp.Repo.Posts.delete_post/1`
+* `MyApp.Repo.Posts.delete_post!/1`
+* `MyApp.Repo.Posts.get_post/2`
+* `MyApp.Repo.Posts.get_post!/2`
+* `MyApp.Repo.Posts.get_post_by/2`
+* `MyApp.Repo.Posts.get_post_by!/2`
+* `MyApp.Repo.Posts.update_post/2`
+* `MyApp.Repo.Posts.update_post!/2`
 
 ### Explicit usage - generate only given functions
 
 ```elixir
-defmodule MyApp.MyContext do
+defmodule MyApp.Repo.Posts do
   alias MyApp.Repo
-  alias MyApp.Schema
+  alias MyApp.Schema.Post
+
   use EctoCooler
 
   using_repo(Repo) do
-    resource(Schema, only: [:create, :delete!])
+    resource(Post, only: [:create, :delete!])
   end
 end
 ```
 
 This generates only the given functions:
 
-* `MyContext.create_schema/1`
-* `MyContext.delete_schema!/1`
+* `MyApp.Repo.Posts.create/1`
+* `MyApp.Repo.Posts.delete!/1`
 
 ### Exclusive usage - generate all but the given functions
 
 ```elixir
-defmodule MyApp.MyContext do
+defmodule MyApp.Repo.Posts do
   alias MyApp.Repo
-  alias MyApp.Schema
+  alias MyApp.Schema.Post
+
   use EctoCooler
 
   using_repo(Repo) do
-    resource(Schema, except: [:create, :delete!])
+    resource(Post, except: [:create, :delete!])
   end
 end
 ```
 
 This generates all the functions excluding the given functions:
 
-* `MyContext.all_schemas/1`
-* `MyContext.change_schema/1`
-* `MyContext.create_schema!/1`
-* `MyContext.delete_schema/1`
-* `MyContext.get_schema/2`
-* `MyContext.get_schema_by/2`
-* `MyContext.get_schema_by!/2`
-* `MyContext.get_schema!/2`
-* `MyContext.update_schema/2`
-* `MyContext.update_schema!/2`
+* `MyApp.Repo.Posts.all/1`
+* `MyApp.Repo.Posts.change/1`
+* `MyApp.Repo.Posts.create!/1`
+* `MyApp.Repo.Posts.delete/1`
+* `MyApp.Repo.Posts.get/2`
+* `MyApp.Repo.Posts.get_by/2`
+* `MyApp.Repo.Posts.get_by!/2`
+* `MyApp.Repo.Posts.get!/2`
+* `MyApp.Repo.Posts.update/2`
+* `MyApp.Repo.Posts.update!/2`
 
 ### Alias `:read` - generate data access functions
 
 ```elixir
-defmodule MyApp.MyContext do
+defmodule MyApp.Repo.Posts do
   alias MyApp.Repo
-  alias MyApp.Schema
+  alias MyApp.Schema.Post
+
   use EctoCooler
 
   using_repo(Repo) do
-    resource(Schema, :read)
+    resource(Post, :read)
   end
 end
 ```
 
 This generates all the functions necessary for reading data:
 
-* `MyContext.all_schemas/1`
-* `MyContext.get_schema/2`
-* `MyContext.get_schema!/2`
+* `MyApp.Repo.Posts.all/1`
+* `MyApp.Repo.Posts.get/2`
+* `MyApp.Repo.Posts.get!/2`
 
 ### Alias `:read_write` - generate data access and manipulation functions, excluding delete
 
 ```elixir
-defmodule MyApp.MyContext do
+defmodule MyApp.Repo.Posts do
   alias MyApp.Repo
-  alias MyApp.Schema
+  alias MyApp.Schema.Post
+
   use EctoCooler
 
   using_repo(Repo) do
-    resource(Schema, :read_write)
+    resource(Post, :read_write)
   end
 end
 ```
 
 This generates all the functions except `delete_schema/1` and `delete_schema!/1`:
 
-* `MyContext.all_schemas/1`
-* `MyContext.change_schema/1`
-* `MyContext.create_schema/1`
-* `MyContext.create_schema!/1`
-* `MyContext.get_schema/2`
-* `MyContext.get_schema!/2`
-* `MyContext.update_schema/2`
-* `MyContext.update_schema!/2`
+* `MyApp.Repo.Posts.all/1`
+* `MyApp.Repo.Posts.change/1`
+* `MyApp.Repo.Posts.create/1`
+* `MyApp.Repo.Posts.create!/1`
+* `MyApp.Repo.Posts.get/2`
+* `MyApp.Repo.Posts.get!/2`
+* `MyApp.Repo.Posts.update/2`
+* `MyApp.Repo.Posts.update!/2`
 
 ### Resource functions
 
 The general idea of the generated resource functions is to abstract away the `Ecto.Repo` and `Ecto.Schema` parts of data access with `Ecto` and provide an API to the context that feels natural and clear to the caller.
 
-The following examples will all assume a repo named `Repo` and a schema named `Person`.
+The following examples will all assume a repo named `Posts` and a schema named `Post`.
 
-#### all_people
+#### Resource.all
 
-Fetches a list of all %Person{} entries from the data store. _Note: `EctoCooler` will pluralize this function name using `Inflex`_
+Fetches a list of all %Post{} entries from the data store. _Note: `EctoCooler` will pluralize this function name using `Inflex`_
 
 ```elixir
-iex> all_people()
-[%Person{id: 1}]
+iex> Posts.all()
+[%Post{id: 1}]
 
-iex> all_people(preloads: [:address])
-[%Person{id: 1, address: %Address{}}]
+iex> Posts.all(preloads: [:address])
+[%Post{id: 1, comment: %Comment{}}]
 
-iex> all_people(order_by: [desc: :id])
-[%Person{id: 2}, %Person{id: 1}]
+iex> Posts.all(order_by: [desc: :id])
+[%Post{id: 2}, %Post{id: 1}]
 
-iex> all_people(preloads: [:address], order_by: [desc: :id]))
+iex> Posts.all(preloads: [:comment], order_by: [desc: :id]))
 [
-  %Person{
+  %Post{
     id: 2,
-    address: %Address{}
+    comment: %Comment{}
   },
-  %Person{
+  %Post{
     id: 1,
-    address: %Address{}
+    comment: %Comment{}
+  }
+]
+
+iex> Posts.all(where: [category: "Testing"])
+[
+  %Post{
+    id: 42,
+    category: "Testing"
+  },
+  %Post{
+    id: 99,
+    category: "Testing"
   }
 ]
 ```
 
-#### change_person
+#### Posts.change
 
-Creates a `%Person{}` changeset.
+Creates a `%Post{}` changeset.
 
 ```elixir
-iex> change_person(%{name: "Example Person"})
+iex> Posts.change(%{title: "Example Post"})
 #Ecto.Changeset<
   action: nil,
-  changes: %{name: "Example Person"},
+  changes: %{title: "Example Post"},
   errors: [],
   data: #Person<>,
   valid?: true
 >
 ```
 
-#### create_person
+#### Posts.create
 
-Inserts a `%Person{}` with the given attributes in the data store, returning an `:ok`/`:error` tuple.
+Inserts a `%Post{}` with the given attributes in the data store, returning an `:ok`/`:error` tuple.
 
 ```elixir
-iex> create_person(%{name: "Example Person"})
-{:ok, %Person{id: 123, name: "Example Person"}}
+iex> Posts.create(%{title: "Example Post"})
+{:ok, %Post{id: 123, title: "Example Post"}}
 
-iex> create_person(%{invalid: "invalid"})
+iex> Posts.create(%{invalid: "invalid"})
 {:error, %Ecto.Changeset}
 ```
 
-#### create_person!
+#### Posts.create!
 
-Inserts a `%Person{}` with the given attributes in the data store, returning a `%Person{}` or raises `Ecto.InvalidChangesetError`.
+Inserts a `%Post{}` with the given attributes in the data store, returning a `%Post{}` or raises `Ecto.InvalidChangesetError`.
 
 ```elixir
-iex> create_person!(%{name: "Example Person"})
-%Person{id: 123, name: "Example Person"}
+iex> Posts.create!(%{title: "Example Post"})
+%Post{id: 123, title: "Example Post"}
 
-iex> create_person!(%{invalid: "invalid"})
+iex> Posts.create!(%{invalid: "invalid"})
 ** (Ecto.InvalidChangesetError)
 ```
 
-#### delete_person
+#### Posts.delete
 
-Deletes a given `%Person{}` from the data store, returning an `:ok`/`:error` tuple.
+Deletes a given `%Post{}` from the data store, returning an `:ok`/`:error` tuple.
 
 ```elixir
-iex> delete_person(%Person{id: 1})
-{:ok, %Person{id: 1}}
+iex> Posts.delete(%Post{id: 1})
+{:ok, %Post{id: 1}}
 
-iex> delete_person(%Person{id: 999})
+iex> Posts.delete(%Post{id: 999})
 {:error, %Ecto.Changeset}
 ```
 
-#### delete_person!
+#### Posts.delete!
 
-Deletes a given `%Person{}` from the data store, returning the deleted `%Person{}`, or raises `Ecto.StaleEntryError`.
+Deletes a given `%Post{}` from the data store, returning the deleted `%Post{}`, or raises `Ecto.StaleEntryError`.
 
 ```elixir
-iex> delete_person!(%Person{id: 1})
-%Person{id: 1}
+iex> Posts.delete!(%Post{id: 1})
+%Post{id: 1}
 
-iex> delete_person!(%Person{id: 999})
+iex> Posts.delete!(%Post{id: 999})
 ** (Ecto.StaleEntryError)
 ```
 
-#### get_person
+#### Posts.get
 
-Fetches a single `%Person{}` from the data store where the primary key matches the given id, returns a `%Person{}` or `nil`.
+Fetches a single `%Post{}` from the data store where the primary key matches the given id, returns a `%Post{}` or `nil`.
 
 ```elixir
-iex> get_person(1)
-%Person{id: 1}
+iex> Posts.get(1)
+%Post{id: 1}
 
-iex> get_person(999)
+iex> Posts.get(999)
 nil
 
-iex> get_person(1, preloads: [:address])
-%Person{
+iex> Posts.get(1, preloads: [:address])
+%Post{
     id: 1,
     address: %Address{}
 }
 ```
 
-#### get_person!
+#### Posts.get!
 
-Fetches a single `%Person{}` from the data store where the primary key matches the given id, returns a `%Person{}` or raises `Ecto.NoResultsError`.
+Fetches a single `%Post{}` from the data store where the primary key matches the given id, returns a `%Post{}` or raises `Ecto.NoResultsError`.
 
 ```elixir
-iex> get_person!(1)
-%Person{id: 1}
+iex> Posts.get!(1)
+%Post{id: 1}
 
-iex> get_person!(999)
+iex> Posts.get!(999)
 ** (Ecto.NoResultsError)
 
-iex> get_person!(1, preloads: [:address])
-%Person{
+iex> Posts.get!(1, preloads: [:comments])
+%Post{
     id: 1,
-    address: %Address{}
+    comments: [%Comment{}],
+    ...
 }
 ```
 
-#### get_person_by
+#### Posts.get_by
 
-Fetches a single `%Person{}` from the data store where the attributes match the
+Fetches a single `%Post{}` from the data store where the attributes match the
 given values.
 
 ```elixir
-iex> get_person_by(%{name: "Chuck Norris"})
-%Person{name: "Chuck Norris"}
+iex> Posts.get_by(%{title: "Example Title"})
+%Post{title: "Example Title"}
 
-iex> get_person_by(%{name: "Doesn't Exist"})
+iex> Posts.get_by(%{title: "Doesn't Exist"})
 nil
 ```
 
-#### get_person_by!
+#### Posts.get_by!
 
-Fetches a single `%Person{}` from the data store where the attributes match the
+Fetches a single `%Post{}` from the data store where the attributes match the
 given values. Raises an `Ecto.NoResultsError` if the record does not exist
 
 ```elixir
-iex> get_person_by!(%{name: "Chuck Norris"})
-%Person{name: "Chuck Norris"}
+iex> Posts.get_by!(%{title: "Example Title"})
+%Post{title: "Example Title"}
 
-iex> get_person_by!(%{name: "Doesn't Exist"})
+iex> Posts.get_by!(%{title: "Doesn't Exist"})
 ** (Ecto.NoResultsError)
 ```
 
-#### update_person
+#### Posts.update
 
-Updates a given %Person{} with the given attributes, returns an `:ok`/`:error` tuple.
+Updates a given %Post{} with the given attributes, returns an `:ok`/`:error` tuple.
 
 ```elixir
-iex> update_person(%Person{id: 1}, %{name: "New Person"})
-{:ok, %Person{id: 1, name: "New Person"}}
+iex> Posts.update(%Post{id: 1}, %{title: "New Post"})
+{:ok, %Post{id: 1, title: "New Post"}}
 
-iex> update_person(%Person{id: 1}, %{invalid: "invalid"})
+iex> Posts.update(%Post{id: 1}, %{invalid: "invalid"})
 {:error, %Ecto.Changeset}
 ```
 
-#### update_person!
+#### Posts.update!
 
 Updates a given %Person{} with the given attributes, returns a %Person{} or raises `Ecto.InvalidChangesetError`.
 
 ```elixir
-iex> update_person!(%Person{id: 1}, %{name: "New Person"})
+iex> Posts.update!(%Person{id: 1}, %{name: "New Person"})
 %Person{id: 1, name: "New Person"}
 
-iex> update_person!(%Person{id: 1}, %{invalid: "invalid"})
+iex> Posts.update!(%Person{id: 1}, %{invalid: "invalid"})
 ** (Ecto.InvalidChangesetError)
 ```
 

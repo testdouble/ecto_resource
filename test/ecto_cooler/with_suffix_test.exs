@@ -7,7 +7,7 @@ defmodule EctoCooler.WithoutSuffixTestContext.People do
   use EctoCooler
 
   using_repo TestRepo do
-    resource(Person, suffix: false)
+    resource(Person, suffix: true)
   end
 end
 
@@ -34,7 +34,7 @@ defmodule EctoCooler.WithoutSuffixTest do
       person = struct(Person, @person_attributes)
 
       Repo.insert(person)
-      [first_person] = results = People.all()
+      [first_person] = results = People.all_people()
 
       assert length(results) == 1
       assert person.first_name == first_person.first_name
@@ -49,7 +49,7 @@ defmodule EctoCooler.WithoutSuffixTest do
         age: 0
       }
 
-      %{changes: changes} = People.change(person, @person_attributes)
+      %{changes: changes} = People.change_person(person, @person_attributes)
 
       assert changes == @person_attributes
     end
@@ -58,32 +58,32 @@ defmodule EctoCooler.WithoutSuffixTest do
   describe "changeset" do
     test "it returns an empty changeset" do
       expected_changeset = Person.changeset(%Person{}, %{})
-      assert People.changeset() == expected_changeset
+      assert People.person_changeset() == expected_changeset
     end
   end
 
   describe "create" do
     test "with valid attributbes, it creates a new record" do
-      {:ok, person} = People.create(@person_attributes)
+      {:ok, person} = People.create_person(@person_attributes)
 
       assert Repo.all(Person) == [person]
     end
 
     test "with invalid attributes, it returns an error tuple with a changeset" do
-      assert {:error, %Ecto.Changeset{}} = People.create(%{})
+      assert {:error, %Ecto.Changeset{}} = People.create_person(%{})
     end
   end
 
   describe "create!" do
     test "whith valid attributes, it creates a new record" do
-      person = People.create!(@person_attributes)
+      person = People.create_person!(@person_attributes)
 
       assert Repo.all(Person) == [person]
     end
 
     test "with invalid attributes, it raises an error" do
       assert_raise Ecto.InvalidChangesetError, fn ->
-        People.create!(%{})
+        People.create_person!(%{})
       end
     end
   end
@@ -97,7 +97,7 @@ defmodule EctoCooler.WithoutSuffixTest do
 
       assert Repo.all(Person) == [person]
 
-      People.delete(person)
+      People.delete_person(person)
 
       assert Repo.all(Person) == []
     end
@@ -111,7 +111,7 @@ defmodule EctoCooler.WithoutSuffixTest do
       Repo.delete(person)
 
       assert_raise Ecto.StaleEntryError, fn ->
-        People.delete(person)
+        People.delete_person(person)
       end
     end
   end
@@ -125,7 +125,7 @@ defmodule EctoCooler.WithoutSuffixTest do
 
       assert Repo.all(Person) == [person]
 
-      People.delete!(person)
+      People.delete_person!(person)
 
       assert Repo.all(Person) == []
     end
@@ -139,7 +139,7 @@ defmodule EctoCooler.WithoutSuffixTest do
       Repo.delete(person)
 
       assert_raise Ecto.StaleEntryError, fn ->
-        People.delete!(person)
+        People.delete_person!(person)
       end
     end
   end
@@ -151,11 +151,11 @@ defmodule EctoCooler.WithoutSuffixTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert person == People.get(person.id)
+      assert person == People.get_person(person.id)
     end
 
     test "with a non-existent record, it returns nil" do
-      assert nil == People.get(999)
+      assert nil == People.get_person(999)
     end
   end
 
@@ -166,12 +166,12 @@ defmodule EctoCooler.WithoutSuffixTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert person == People.get!(person.id)
+      assert person == People.get_person!(person.id)
     end
 
     test "with a non-existent record, it raises an error" do
       assert_raise Ecto.NoResultsError, fn ->
-        People.get!(999)
+        People.get_person!(999)
       end
     end
   end
@@ -183,11 +183,11 @@ defmodule EctoCooler.WithoutSuffixTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert People.get_by(age: @person_attributes.age) == person
+      assert People.get_person_by(age: @person_attributes.age) == person
     end
 
     test "with a non-existent record, it returns nil" do
-      assert People.get_by(age: @person_attributes.age) == nil
+      assert People.get_person_by(age: @person_attributes.age) == nil
     end
   end
 
@@ -198,7 +198,7 @@ defmodule EctoCooler.WithoutSuffixTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert People.get_by!(age: @person_attributes.age) == person
+      assert People.get_person_by!(age: @person_attributes.age) == person
     end
   end
 
@@ -209,7 +209,7 @@ defmodule EctoCooler.WithoutSuffixTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      {:ok, updated_person} = People.update(person, @updated_person_attributes)
+      {:ok, updated_person} = People.update_person(person, @updated_person_attributes)
 
       assert person.id == updated_person.id
       assert person.first_name != updated_person.first_name
@@ -224,7 +224,7 @@ defmodule EctoCooler.WithoutSuffixTest do
         |> Repo.insert()
 
       assert {:error, changeset} =
-               People.update(person, %{first_name: nil, last_name: nil, age: nil})
+               People.update_person(person, %{first_name: nil, last_name: nil, age: nil})
 
       refute changeset.valid?
     end
@@ -237,7 +237,7 @@ defmodule EctoCooler.WithoutSuffixTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      updated_person = People.update!(person, @updated_person_attributes)
+      updated_person = People.update_person!(person, @updated_person_attributes)
 
       assert person.id == updated_person.id
       assert person.first_name != updated_person.first_name
@@ -252,7 +252,7 @@ defmodule EctoCooler.WithoutSuffixTest do
         |> Repo.insert()
 
       assert_raise Ecto.InvalidChangesetError, fn ->
-        People.update!(person, %{first_name: nil, last_name: nil, age: nil})
+        People.update_person!(person, %{first_name: nil, last_name: nil, age: nil})
       end
     end
   end

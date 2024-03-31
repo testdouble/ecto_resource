@@ -23,7 +23,7 @@ defmodule EctoCooler.MixProject do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_), do: ["lib"]
+  defp elixirc_paths(_), do: ["lib", "lib/mix/tasks"]
 
   defp aliases do
     [
@@ -42,18 +42,19 @@ defmodule EctoCooler.MixProject do
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Dayton Nolan"],
       licenses: ["Apache 2.0"],
-      links: %{"GitHub" => "https://github.com/testdouble/ecto_cooler"}
+      links: %{"GitHub" => "https://github.com/daytonn/ecto_cooler"}
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [extra_applications: [:logger]]
+    [extra_applications: [:logger, :bunt, :eex]]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:bunt, "~> 1.0"},
       {:ecto_sql, ">= 3.10.1"},
       {:ex_doc, ">= 0.29.4", only: :dev, runtime: false},
       {:inflex, ">= 2.1.0"},

@@ -1,0 +1,12 @@
+defmodule <%= assigns.app_name %>.<%= assigns.repo_namespace %>.<%= assigns.repo_name %> do
+  use EctoCooler
+
+  import Ecto.Query, warn: false
+
+  alias <%= assigns.app_name %>.Repo
+  alias <%= assigns.app_name %>.<%= assigns.schema_namespace %>.<%= assigns.schema_name %>
+
+  using_repo(Repo) do
+<%= if assigns.suffix do %>    resource(<%= assigns.schema_name %>, suffix: true)<% else %>    resource(<%= assigns.schema_name %>)<% end %>
+  end
+end

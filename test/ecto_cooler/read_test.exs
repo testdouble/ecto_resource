@@ -34,7 +34,7 @@ defmodule EctoCooler.ReadTest do
       person = struct(Person, @person_attributes)
 
       Repo.insert(person)
-      [first_person] = results = People.all_people()
+      [first_person] = results = People.all()
 
       assert length(results) == 1
       assert person.first_name == first_person.first_name
@@ -50,7 +50,7 @@ defmodule EctoCooler.ReadTest do
       }
 
       assert_raise UndefinedFunctionError, fn ->
-        People.change_person(person, @person_attributes)
+        People.change(person, @person_attributes)
       end
     end
   end
@@ -58,7 +58,7 @@ defmodule EctoCooler.ReadTest do
   describe "changeset" do
     test "it doesn't create a changeset function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.person_changeset()
+        People.changeset()
       end
     end
   end
@@ -66,7 +66,7 @@ defmodule EctoCooler.ReadTest do
   describe "create" do
     test "it doesn't create a create function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.create_person(@person_attributes)
+        People.create(@person_attributes)
       end
     end
   end
@@ -74,7 +74,7 @@ defmodule EctoCooler.ReadTest do
   describe "create!" do
     test "it doesn't create a create! function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.create_person!(@person_attributes)
+        People.create!(@person_attributes)
       end
     end
   end
@@ -87,7 +87,7 @@ defmodule EctoCooler.ReadTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person(person)
+        People.delete(person)
       end
     end
   end
@@ -100,7 +100,7 @@ defmodule EctoCooler.ReadTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person!(person)
+        People.delete!(person)
       end
     end
   end
@@ -112,11 +112,11 @@ defmodule EctoCooler.ReadTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert person == People.get_person(person.id)
+      assert person == People.get(person.id)
     end
 
     test "with a non-existent record, it returns nil" do
-      assert nil == People.get_person(999)
+      assert nil == People.get(999)
     end
   end
 
@@ -127,12 +127,12 @@ defmodule EctoCooler.ReadTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert person == People.get_person!(person.id)
+      assert person == People.get!(person.id)
     end
 
     test "with a non-existent record, it raises an error" do
       assert_raise Ecto.NoResultsError, fn ->
-        People.get_person!(999)
+        People.get!(999)
       end
     end
   end
@@ -144,11 +144,11 @@ defmodule EctoCooler.ReadTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert People.get_person_by(age: @person_attributes.age) == person
+      assert People.get_by(age: @person_attributes.age) == person
     end
 
     test "with a non-existent record, it returns nil" do
-      assert People.get_person_by(age: @person_attributes.age) == nil
+      assert People.get_by(age: @person_attributes.age) == nil
     end
   end
 
@@ -159,7 +159,7 @@ defmodule EctoCooler.ReadTest do
         |> struct(@person_attributes)
         |> Repo.insert()
 
-      assert People.get_person_by!(age: @person_attributes.age) == person
+      assert People.get_by!(age: @person_attributes.age) == person
     end
   end
 
@@ -171,7 +171,7 @@ defmodule EctoCooler.ReadTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.update_person(person, @updated_person_attributes)
+        People.update(person, @updated_person_attributes)
       end
     end
   end
@@ -184,7 +184,7 @@ defmodule EctoCooler.ReadTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.update_person!(person, @updated_person_attributes)
+        People.update!(person, @updated_person_attributes)
       end
     end
   end

@@ -34,7 +34,7 @@ defmodule EctoCooler.OnlyFilterTest do
       person = struct(Person, @person_attributes)
 
       Repo.insert(person)
-      [first_person] = results = People.all_people()
+      [first_person] = results = People.all()
 
       assert length(results) == 1
       assert person.first_name == first_person.first_name
@@ -49,7 +49,7 @@ defmodule EctoCooler.OnlyFilterTest do
         age: 0
       }
 
-      %{changes: changes} = People.change_person(person, @person_attributes)
+      %{changes: changes} = People.change(person, @person_attributes)
 
       assert changes == @person_attributes
     end
@@ -58,7 +58,7 @@ defmodule EctoCooler.OnlyFilterTest do
   describe "changeset" do
     test "it doesn't create a changeset function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.person_changeset()
+        People.changeset()
       end
     end
   end
@@ -66,7 +66,7 @@ defmodule EctoCooler.OnlyFilterTest do
   describe "create" do
     test "it doesn't create a create function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.create_person(@person_attributes)
+        People.create(@person_attributes)
       end
     end
   end
@@ -74,7 +74,7 @@ defmodule EctoCooler.OnlyFilterTest do
   describe "create!" do
     test "it doesn't create a create! function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.create_person!(@person_attributes)
+        People.create!(@person_attributes)
       end
     end
   end
@@ -87,7 +87,7 @@ defmodule EctoCooler.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person(person)
+        People.delete(person)
       end
     end
   end
@@ -100,7 +100,7 @@ defmodule EctoCooler.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.delete_person!(person)
+        People.delete!(person)
       end
     end
   end
@@ -113,7 +113,7 @@ defmodule EctoCooler.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.get_person(person.id)
+        People.get(person.id)
       end
     end
   end
@@ -126,7 +126,7 @@ defmodule EctoCooler.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.get_person!(person.id)
+        People.get!(person.id)
       end
     end
   end
@@ -134,7 +134,7 @@ defmodule EctoCooler.OnlyFilterTest do
   describe "get_by" do
     test "doesn't create a get_by function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.get_person_by(age: @person_attributes.age)
+        People.get_by(age: @person_attributes.age)
       end
     end
   end
@@ -142,7 +142,7 @@ defmodule EctoCooler.OnlyFilterTest do
   describe "get_by!" do
     test "doesn't create a get_by! function" do
       assert_raise UndefinedFunctionError, fn ->
-        People.get_person_by!(age: @person_attributes.age)
+        People.get_by!(age: @person_attributes.age)
       end
     end
   end
@@ -155,7 +155,7 @@ defmodule EctoCooler.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.update_person(person, @updated_person_attributes)
+        People.update(person, @updated_person_attributes)
       end
     end
   end
@@ -168,7 +168,7 @@ defmodule EctoCooler.OnlyFilterTest do
         |> Repo.insert()
 
       assert_raise UndefinedFunctionError, fn ->
-        People.update_person!(person, @updated_person_attributes)
+        People.update!(person, @updated_person_attributes)
       end
     end
   end
