@@ -63,10 +63,10 @@ defmodule EctoResource.OptionParser do
 
   @spec create_suffix(module, list()) :: String.t()
   def create_suffix(schema, options) when is_list(options) do
-    if Keyword.get(options, :suffix) == false do
-      ""
-    else
-      Helpers.underscore_module_name(schema)
+    case Keyword.get(options, :suffix) do
+      false -> ""
+      manual when is_binary(manual) -> manual
+      _ -> Helpers.underscore_module_name(schema)
     end
   end
 

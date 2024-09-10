@@ -292,5 +292,9 @@ defmodule EctoResource.OptionParserTest do
       assert OptionParser.create_suffix(TestSchema, suffix: false, except: [:create!, :create]) ==
                ""
     end
+
+    test "when suffix is set to a string, it returns that string directly" do
+      assert OptionParser.create_suffix(TestSchema, suffix: "some_thing") == "some_thing"
+    end
   end
 end
