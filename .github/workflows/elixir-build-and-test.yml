@@ -15,11 +15,11 @@ jobs:
         include:
           # Elixir 1.13
           - elixir-version: "1.13.0"
-            otp-version: "24.3.1"
+            otp-version: "24.3.4.17"
 
           # Elixir 1.14
           - elixir-version: "1.14.0"
-            otp-version: "24.3.1"
+            otp-version: "24.3.4.17"
           - elixir-version: "1.14.0"
             otp-version: "25.3.1"
 
