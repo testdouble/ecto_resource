@@ -1,1 +1,4 @@
 * @joseph-lozano
+
+# If you have commit access, it's fine to update the lockfile without review
+mix.lock
